@@ -8,6 +8,5 @@
 // Install Dependencies:
 $ sudo apt-get install swig libpulse-dev libasound2-dev
 
-
 // Finally, install pocketsphinx
 $ sudo python3 -m pip install pocketsphinx
