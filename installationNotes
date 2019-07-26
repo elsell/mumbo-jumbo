@@ -1,0 +1,13 @@
+/*
+    This file serves to provide lossless recollection of 
+    the process taken to install pocketsphinx on Ubuntu 18.04
+
+    More details: https://pypi.org/project/pocketsphinx/
+*/
+
+// Install Dependencies:
+$ sudo apt-get install swig libpulse-dev libasound2-dev
+
+
+// Finally, install pocketsphinx
+$ sudo python3 -m pip install pocketsphinx
