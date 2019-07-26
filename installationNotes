@@ -10,3 +10,30 @@ $ sudo apt-get install swig libpulse-dev libasound2-dev
 
 // Finally, install pocketsphinx
 $ sudo python3 -m pip install pocketsphinx
+
+
+/* ======= pyttsx3 ======== */
+// Install dependencies:
+$ sudo apt-get update && sudo apt-get install espeak
+
+// Install pyttsx3 
+$ sudo python3 -m pip install pyttsx3
+
+/* Festival TTS */
+// Download release and speech tools (place them in the same directory):
+http://www.festvox.org/packed/festival/2.5/
+
+// Install dependencies:
+$ sudo apt-get install lib32ncurses5-dev
+
+// Build the tools:
+$ cd /path/to/speech_tools/
+$ ./configure
+$ make
+
+// Add to path
+$ export PATH=/path/to/speech_tools/bin:$PATH
+
+// Turns out you might be able to just install it from the package manager...
+https://www.youtube.com/watch?v=4eJTDpAeBSk
+
