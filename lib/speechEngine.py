@@ -42,11 +42,12 @@ class SpeechEngine:
 
         os.system(CMD1 + '"' + text + '" | ' + CMD2)
 
-    def AskQuestion(self, question):
+    def AskQuestion(self, question, isSilent = False):
         if not isinstance(question, Question):
             raise TypeError("AskQuestion takes a Question object")
         
-        self.SpeakText(question.Message)
+        if not isSilent:
+            self.SpeakText(question.Message)
 
         model_path = get_model_path()
 
