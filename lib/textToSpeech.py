@@ -2,15 +2,25 @@
 
 """
 Created by John Sell 07 26 2019
-Basic code that will serve as the building blocks
-for future tts work
+
+Here is a nice little function that accepts a str
+and speaks the string. 
+
+Note: You must have festival installed. See installationNotes
+for more details.
+
+Usage: 
+from textToSpeech import SpeakText
+
+SpeakText("Here is some text to speak")
+
 """
 
 import os
 
-text = "Oh come on Jerry! I exclaimed. We need to continue on!"
+CMD1 = 'echo '
+CMD2 = "festival --tts"
 
-frontCmd = 'echo '
-baseCmd = "../bin/tts/festival/bin/festival --tts"
+def SpeakText(text):
+    os.system(CMD1 + '"' + text + '" | ' + CMD2)
 
-os.system(frontCmd + '"' + text + '" | ' + baseCmd)
