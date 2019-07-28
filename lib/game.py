@@ -23,5 +23,7 @@ class Game:
         }
 
         self._playerInCombat = False
+        self._playerIsMoving = False
+        
 
 
