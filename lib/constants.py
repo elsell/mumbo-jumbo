@@ -1,3 +1,5 @@
+#! /usr/bin/python3
+
 """
 Class to hold constant values
 (Mostly maps between numeric values and descriptions)
