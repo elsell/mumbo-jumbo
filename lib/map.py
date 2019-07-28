@@ -38,12 +38,14 @@ class Map:
 
     # Eventually will procedurally generate a map. For now, it does RANDOMNESS!
     def _GenerateMap(self):
+        # Fill map with random data
         for x in range(0, self._size):
             for y in range(0, self._size):
                 self._heightMap[x][y] = random.randint(0, len(self._constants.HeightDescriptions) - 1)
                 self._riverMap[x][y] = random.randint(0, len(self._constants.RiverDescriptions) - 1)
                 self._locMap[x][y] = random.randint(0, len(self._constants.LocationDescriptions) - 1)
                 self._treeMap[x][y] = random.randint(0, len(self._constants.TreeDescriptions) - 1)
+                
 
     ## DESCRIPTION GETTERS ##
     def DescribeHeight(self, x, y):
