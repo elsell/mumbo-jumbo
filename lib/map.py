@@ -53,7 +53,7 @@ class Map:
             
             for x in range(0, self._size + sSize + 1):
                 for y in range(0, self._size + 1):
-                    tempArr[x][y] = random.uniform(-heightBound, heightBound) 
+                    tempArr[x][y] = random.uniform(-heightBound + 4.5, heightBound - 3) 
 
             # Horizontal Interpolation
             for x in range(0, self._size):
