@@ -36,7 +36,7 @@ class Map:
         # Now we shall generate our map
         self._GenerateMap()
 
-    # Eventually will procedurally generate a map. For now, it does RANDOMNESS!
+    # Eventually will procedurally generate a map. For now, it...does?
     def _GenerateMap(self):
         sSize = self._constants.SpreadSize
         heightBound = len(self._constants.HeightDescriptions) - 1
@@ -57,18 +57,20 @@ class Map:
             # Horizontal Interpolation
             for x in range(0, self._size):
                 for y in range(0, self._size):
-                    yCoord = y - y % sSize + sSize
+                    yCoord = y - y % sSize
                     multiplier = float(y % sSize) / sSize
-                    tmpOffset = float(tempArr[x][yCoord])
-                    tempArr[x][y] = tmpOffset * multiplier + tmpOffset * (1 - multiplier)
+                    val1 = float(tempArr[x][yCoord + sSize])
+                    val2 = float(tempArr[x][yCoord])
+                    tempArr[x][y] = val1 * multiplier + val2 * (1 - multiplier)
 
             # Vertical Interpolation
             for x in range(0, self._size):
                 for y in range(0, self._size ):
-                    xCoord = x - x % sSize + sSize
+                    xCoord = x - x % sSize
                     multiplier = float(x % sSize) / sSize
-                    tmpOffset = float(tempArr[xCoord][y])
-                    tempArr[x][y] = tmpOffset * multiplier + tmpOffset * (1 - multiplier)     
+                    val1 = float(tempArr[xCoord + sSize][y])
+                    val2 = float(tempArr[xCoord][y])
+                    tempArr[x][y] = val1 * multiplier + val2 * (1 - multiplier)     
   
 
             # Add to Map
@@ -118,7 +120,7 @@ class Map:
 if __name__ == "__main__":
     # Perform Self-Test
     # Create Map
-    m =  Map(3)
+    m =  Map(80)
     m.SaveToFile()
     """
 
