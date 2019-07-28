@@ -10,6 +10,7 @@ Created by John Sell
 
 from constants import Constants
 import random
+import json
 
 class Map:
     def __init__(self, size):  
@@ -56,6 +57,19 @@ class Map:
 
     def DescribeTrees(self, x, y):
         return self._constants.TreeDescriptions[self._treeMap[x][y]]
+
+    # Saves serialized representation of the map for visualization purposes
+    def SaveToFile(self, filename = "map.data"):
+        # Build Object to Convert to JSON
+        obj = {
+            "heightMap": self._heightMap,
+            "riverMap": self._riverMap,
+            "locationMap": self._locMap,
+            "treeMap": self._treeMap
+        }
+        with open(filename, 'w') as file:
+            file.write(json.dumps(obj))
+
 
 
 if __name__ == "__main__":
