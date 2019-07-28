@@ -12,9 +12,10 @@ class Constants:
     def __init__(self):
         pass
 
+    # This property relates to the 'smoothness' of the generated map
     @property
     def SpreadSize(self):
-        return 16
+        return 26
 
 
     @property

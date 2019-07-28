@@ -12,6 +12,7 @@ from constants import Constants
 import random
 import json
 
+
 class Map:
     def __init__(self, size):  
         if(size < 1):
@@ -39,7 +40,7 @@ class Map:
     # Eventually will procedurally generate a map. For now, it...does?
     def _GenerateMap(self):
         sSize = self._constants.SpreadSize
-        heightBound = len(self._constants.HeightDescriptions) - 1
+        heightBound = float(len(self._constants.HeightDescriptions) - 1)
         maxHeight = heightBound
         minHeight = -heightBound
 
@@ -65,7 +66,7 @@ class Map:
 
             # Vertical Interpolation
             for x in range(0, self._size):
-                for y in range(0, self._size ):
+                for y in range(0, self._size):
                     xCoord = x - x % sSize
                     multiplier = float(x % sSize) / sSize
                     val1 = float(tempArr[xCoord + sSize][y])
@@ -120,7 +121,7 @@ class Map:
 if __name__ == "__main__":
     # Perform Self-Test
     # Create Map
-    m =  Map(80)
+    m =  Map(50)
     m.SaveToFile()
     """
 
