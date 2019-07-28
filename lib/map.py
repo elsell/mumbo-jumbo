@@ -121,7 +121,7 @@ class Map:
 if __name__ == "__main__":
     # Perform Self-Test
     # Create Map
-    m =  Map(50)
+    m =  Map(80)
     m.SaveToFile()
     """
 

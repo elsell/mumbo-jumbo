@@ -22,8 +22,11 @@ class Game:
             "y": mapSize * .5
         }
 
+        self._attack = False
+
         self._playerInCombat = False
-        self._playerIsMoving = False
+        self._playerMovementDirection = self._C.NoMovement
         
 
-
+if __name__ == "__main__":
+    g = Game(10)

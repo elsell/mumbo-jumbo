@@ -32,6 +32,23 @@ class Constants:
             9: "Most Certainly In Space",
         }
 
+
+    @property
+    def NoMovement(self):
+        return 0
+    @property
+    def North(self):
+        return 1
+    @property
+    def South(self):
+        return 2
+    @property
+    def East(self):
+        return 3
+    @property
+    def West(self):
+        return 4
+
     @property
     def PlayerDefaults(self):
         return{
