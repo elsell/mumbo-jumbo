@@ -25,7 +25,7 @@ class Map:
         # Create and initialize member variables
         self._size = size
 
-        self._heightMap = [ [ 1 for y in range( size ) ] for x in range( size ) ]
+        self._heightMap = [ [ 0 for y in range( size ) ] for x in range( size ) ]
 
         self._riverMap  = [ [ 0 for y in range( size ) ] for x in range( size ) ]
 
@@ -38,14 +38,55 @@ class Map:
 
     # Eventually will procedurally generate a map. For now, it does RANDOMNESS!
     def _GenerateMap(self):
-        # Fill map with random data
-        for x in range(0, self._size):
-            for y in range(0, self._size):
-                self._heightMap[x][y] = random.randint(0, len(self._constants.HeightDescriptions) - 1)
-                self._riverMap[x][y] = random.randint(0, len(self._constants.RiverDescriptions) - 1)
-                self._locMap[x][y] = random.randint(0, len(self._constants.LocationDescriptions) - 1)
-                self._treeMap[x][y] = random.randint(0, len(self._constants.TreeDescriptions) - 1)
-                
+        sSize = self._constants.SpreadSize
+        heightBound = len(self._constants.HeightDescriptions) - 1
+        maxHeight = heightBound
+        minHeight = -heightBound
+
+        for time in range(0,4):
+            # Ensure sSize is indeed an integer
+            sSize = int(sSize)
+
+            # Fill temp array with random data
+            tempArr = [ [ 0 for y in range( self._size + sSize + 1) ] for x in range( self._size + sSize + 1) ]
+            
+            for x in range(0, self._size + sSize + 1):
+                for y in range(0, self._size + 1):
+                    tempArr[x][y] = random.uniform(-heightBound, heightBound) 
+
+            # Horizontal Interpolation
+            for x in range(0, self._size):
+                for y in range(0, self._size):
+                    yCoord = y - y % sSize + sSize
+                    multiplier = float(y % sSize) / sSize
+                    tmpOffset = float(tempArr[x][yCoord])
+                    tempArr[x][y] = tmpOffset * multiplier + tmpOffset * (1 - multiplier)
+
+            # Vertical Interpolation
+            for x in range(0, self._size):
+                for y in range(0, self._size ):
+                    xCoord = x - x % sSize + sSize
+                    multiplier = float(x % sSize) / sSize
+                    tmpOffset = float(tempArr[xCoord][y])
+                    tempArr[x][y] = tmpOffset * multiplier + tmpOffset * (1 - multiplier)     
+  
+
+            # Add to Map
+            for x in range(0, self._size):
+                for y in range(0, self._size):
+                    curVal = self._heightMap[x][y]
+
+                    self._heightMap[x][y] = curVal + tempArr[x][y]
+                    if(self._heightMap[x][y] > heightBound):
+                        self._heightMap[x][y] = heightBound
+                    if(self._heightMap[x][y] < 0):
+                        self._heightMap[x][y] = 0
+            
+            # Modify Parameters for the Next Pass
+            maxHeight = maxHeight * .5
+            minHeight = minHeight * .5
+            sSize     = sSize     * .5
+                       
 
     ## DESCRIPTION GETTERS ##
     def DescribeHeight(self, x, y):
@@ -76,10 +117,11 @@ class Map:
 
 if __name__ == "__main__":
     # Perform Self-Test
-    
     # Create Map
-    map =  Map(10)
-    
+    m =  Map(3)
+    m.SaveToFile()
+    """
+
     # Print Height Descriptions
     print("________HEIGHT DESCRIPTIONS_________")
     for x in range(0, map._size):
@@ -103,3 +145,5 @@ if __name__ == "__main__":
     for x in range(0, map._size):
         for y in range(0, map._size):
             print("(" + str(x) + "," + str(y) + "): " + map.DescribeTrees(x,y))
+    """
+    

@@ -13,6 +13,11 @@ class Constants:
         pass
 
     @property
+    def SpreadSize(self):
+        return 16
+
+
+    @property
     def HeightDescriptions(self):
         return{
             0: "a sea",
