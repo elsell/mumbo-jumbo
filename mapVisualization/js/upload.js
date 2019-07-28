@@ -1,5 +1,9 @@
 window.onload = function() {
     var fileInput = document.getElementById('fileInput');
+    fileInput.addEventListener("click", function(e)
+    {
+        fileInput.value = "";
+    });
 
     fileInput.addEventListener('change', function(e) {
         var file = fileInput.files[0];

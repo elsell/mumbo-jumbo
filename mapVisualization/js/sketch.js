@@ -2,7 +2,6 @@ mapHeights = [];
 mapSize = 0;
 CELL_SIZE = 30;
 HEIGHT_SCALAR = 5;
-
 COLORS = 
 [
     "#0000FF", // Water
@@ -19,16 +18,17 @@ COLORS =
 var c;
 function setup() {
     //c = createCanvas(window.innerWidth * .99, window.innerHeight * .8, WEBGL);
-    height = 1080
+    height = 4080;
+    frameRate(3);
     c = createCanvas(height * 1.7,height, WEBGL);
 }
   
 var HAS_SAVE = false;
 function draw() {
     orbitControl();
-    background(100);
+    background("#070d17");
 
-    translate((-mapSize * .68) * CELL_SIZE,0,-700)
+    translate((-mapSize * .68) * CELL_SIZE,0,2200)
 
     rotateX(-PI/6)
     rotateY(PI/3)
@@ -62,7 +62,8 @@ function draw() {
 
 function LoadMap(data)
 {
-    mapSize = data["heightMap"].length
+    clear();
+    mapSize = data["heightMap"].length;
     mapHeights = data["heightMap"];
     CreateKey();
 }
@@ -74,8 +75,10 @@ function CreateKey()
     for(color of COLORS)
     {
         push();
+        rotateZ(PI/9);     
+        rotateX(PI);
         fill(color)
-        square(0, -500 + i++ * colorSize, colorSize)
+        square(-200, -500 + i++ * colorSize, colorSize)
         pop();
     }
 }
