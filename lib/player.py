@@ -9,6 +9,23 @@ Who shall play this game? The player!
 
 from constants import Constants
 
+class Equipment:
+    def __init(self, hp, attack, noise, speed, sneak):
+        self._hpBuff = hp
+        self._attackBuff = attack
+        self._noiseBuff = noise
+        self._speedBuff = speed
+        self._sneakBuff = sneak
+
+    @property
+    def BuffAmounts(self):
+        return {
+            "hp"    : self._hpBuff,
+            "attack": self._attackBuff,
+            "noise" : self._noiseBuff,
+            "speed" : self._speedBuff,
+            "sneak" : self._sneakBuff  
+        }
 
 class Player:
     def __init__(self):
@@ -16,11 +33,11 @@ class Player:
 
         self._stats = constants.PlayerDefaults
         self._equipment = {
-            "body" : 0,
-            "legs" : 0,
-            "arms" : 0,
-            "hands": 0,
-            "feet" : 0
+            "body" : [],
+            "legs" : [],
+            "arms" : [],
+            "hands": [],
+            "feet" : []
         }
 
         self._activeEnemy = None
