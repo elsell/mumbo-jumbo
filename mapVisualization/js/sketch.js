@@ -1,5 +1,6 @@
 mapHeights = [];
 mapTrees = []
+mapRivers = []
 mapSize = 0;
 CELL_SIZE = 20;
 HEIGHT_SCALAR = 5;
@@ -14,6 +15,7 @@ COLORS =
     "#6f5c82", // Rocky Outcropping
     "#a6a7f7", // Mountain Side
     "#a1a1a1", // Mountain Top
+    "#a1a1aF", // Mountain Top
     "#f0fcff", // Clouds
 ];
 FOLIAGE_COLORS = 
@@ -93,15 +95,41 @@ function draw() {
                 fill(colorStr);
             }
 
+            // Draw Terrain
             stroke(1);
             strokeWeight(1);
             var boxHeight = curCellHeight * HEIGHT_SCALAR;
-            translate(x * CELL_SIZE,boxHeight * -.5,y * CELL_SIZE);
+            translate(y * CELL_SIZE,boxHeight * -.5,x * CELL_SIZE);
             box(CELL_SIZE, boxHeight, CELL_SIZE);
 
+            // Draw Rivers
+            riverDirection = mapRivers[x][y];
+            if(riverDirection > 0)
+            {
+                fill("#FF0000");
+                switch(riverDirection)
+                {
+                    case 5:
+                    case 10:
+                        rotateY(PI/2);
+                        break;
+                    case 1:
+                    case 6:
+                        // The box is already oriented North-South
+                        break;
+                    case 12:
+                        // A puddle :P
+                        scale(.5,1,2.5);
+                        fill("#FF0000")
+                        break;
+                }
+                box(CELL_SIZE + 1, boxHeight + 1 , CELL_SIZE * .2 + 1);
+            }
+
             // Draw Trees
+            push();
             var numTrees = mapTrees[x][y];
-            if(numTrees > 0)
+            if(numTrees < 0) // Change this to > to resume
             {
                 var treeHeight = CELL_SIZE * numTrees * .7
                 translate(0,-boxHeight * .5 - treeHeight * .5 ,0);
@@ -111,6 +139,7 @@ function draw() {
                 fill(colorStr);
                 box(CELL_SIZE * .25,  treeHeight,CELL_SIZE * .25);
             }
+            pop();
             pop();
         }
         pop();
@@ -125,6 +154,7 @@ function LoadMap(data)
     mapSize = data["heightMap"].length;
     mapHeights = data["heightMap"];
     mapTrees = data["treeMap"];
+    mapRivers = data["riverMap"];
 
     // This ensures the map always fills the viewing window
     CELL_SIZE = 1800 / mapSize;

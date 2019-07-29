@@ -46,7 +46,7 @@ class Map:
 
     # Recursively traces a river down a slope starting at the cell
     # tempArr[x][y]
-    def _TraceRiverPath(self, x, y, tempArr):
+    def _TraceRiverPath(self, x, y, tempArr, length = 0):
         curCellHeight = tempArr[x][y]
 
         # We shall spawn a river!
@@ -63,6 +63,8 @@ class Map:
         # Find the loweset adjacent cell
         for cellCoords in adjacentCells:
             try:
+                if cellCoords[0] < 0 or cellCoords[1] < 0:
+                    continue
                 adjacentCellHeight = tempArr[cellCoords[0]][cellCoords[1]]
             except:
                 # We've gone outside of the map...just skip this cell
@@ -74,6 +76,7 @@ class Map:
         # If there are no adjacent cells that are lower, we give up!
         # No sense in building a river where this is no downward slope...it'd be a lake!
         if lowestAdjacentCell is None:
+            self._riverMap[x][y] = 12 # A puddle
             return None
 
         # Now we need to figure out the direction of flow...yippee
@@ -97,12 +100,13 @@ class Map:
             direction = 6
 
         print("We have a flow: " + self._constants.RiverDescriptions[direction])
-        
+        print("x: " +str(lowestAdjacentCell[0]) + " y: " + str(lowestAdjacentCell[1]) + " d: " + str(direction))
+      
         # Update the river map
-        self._riverMap[lowestAdjacentCell[0]][lowestAdjacentCell[1]] = direction
+        self._riverMap[x][y] = direction
 
         # Now trace the lowestCell down
-        self._TraceRiverPath(lowestAdjacentCell[0], lowestAdjacentCell[1], tempArr)
+        return self._TraceRiverPath(lowestAdjacentCell[0], lowestAdjacentCell[1], tempArr, length + 1)
                 
 
     def _GenerateRiverMap(self):
@@ -116,8 +120,8 @@ class Map:
 
                 if curCellHeight > self._constants.MinRiverSpawnHeight:
                     if random.random() > self._constants.RiverSpawnChance:
-                        print("Luck has favored us! We will make a river!")
                         self._TraceRiverPath(x, y, tempArr)
+
 
                         
 

@@ -25,7 +25,7 @@ class Constants:
     # Chance that a river spawns on a > MinRiverSpawnHeight height cell
     @property
     def RiverSpawnChance(self):
-        return .5
+        return .2
 
     @property
     def HeightDescriptions(self):
@@ -157,6 +157,7 @@ class Constants:
             9: "from east to north",
             10: "from east to west",
             11: "from east to south",
+            12: "a puddle"
         }
 
     
