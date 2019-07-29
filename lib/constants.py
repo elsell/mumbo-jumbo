@@ -15,7 +15,7 @@ class Constants:
     # This property relates to the 'smoothness' of the generated map
     @property
     def SpreadSize(self):
-        return 26
+        return 16
 
     @property
     def HeightDescriptions(self):

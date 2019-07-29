@@ -11,8 +11,9 @@ Created by John Sell
 from constants import Constants
 import random
 import json
+from sys import getsizeof
 
-
+random.seed(1234)
 class Map:
     def __init__(self, size):  
         if(size < 1):
@@ -44,7 +45,7 @@ class Map:
         maxHeight = heightBound
         minHeight = -heightBound
 
-        for time in range(0,4):
+        for time in range(0,3):
             # Ensure sSize is indeed an integer
             sSize = int(sSize)
 
@@ -53,7 +54,7 @@ class Map:
             
             for x in range(0, self._size + sSize + 1):
                 for y in range(0, self._size + 1):
-                    tempArr[x][y] = random.uniform(-heightBound, heightBound) 
+                    tempArr[x][y] = random.uniform(-heightBound + 4.5, heightBound - 3) 
 
             # Horizontal Interpolation
             for x in range(0, self._size):
@@ -113,6 +114,7 @@ class Map:
             "locationMap": self._locMap,
             "treeMap": self._treeMap
         }
+        
         with open(filename, 'w') as file:
             file.write(json.dumps(obj))
 
