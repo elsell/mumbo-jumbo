@@ -116,7 +116,7 @@ class Map:
                 curCellHeight = tempArr[x][y]
 
                 if curCellHeight > self._constants.MinRiverSpawnHeight:
-                    if random.random() > self._constants.RiverSpawnChance:
+                    if random.random() < self._constants.RiverSpawnChance:
                         self._TraceRiverPath(x, y, tempArr)
 
 
@@ -260,7 +260,7 @@ class Map:
 if __name__ == "__main__":
     # Perform Self-Test
     # Create Map
-    m =  Map(80)
+    m =  Map(30)
     m.SaveToFile()
     """
 
