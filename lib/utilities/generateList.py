@@ -59,13 +59,33 @@ Children's room
 """
 
 treeDescriptions = """
-some trees
-sparse trees
-trees
-thick trees
+no foliage
+a tree
+a few trees
+a scattering of trees and shrubs
+a grove
+a thin wood
+a moderate wood
+a thicket
+a forest
+a dense forest
 """
 
-listString = treeDescriptions
+elevations = """
+a sea
+a lowland area
+a meadow
+a plain
+a prairie
+a hilly area
+a highland area
+a rocky highland
+a mountainside
+a mountain
+a snowy mountaintop
+"""
+
+listString = elevations
 
 # Convert string list to list list
 listItems = listString.split("\n")
