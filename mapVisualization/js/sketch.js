@@ -129,7 +129,7 @@ function draw() {
             // Draw Trees
             push();
             var numTrees = mapTrees[x][y];
-            if(numTrees < 0) // Change this to > to resume
+            if(numTrees > 0) 
             {
                 var treeHeight = CELL_SIZE * numTrees * .7
                 translate(0,-boxHeight * .5 - treeHeight * .5 ,0);

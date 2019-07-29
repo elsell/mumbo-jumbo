@@ -98,10 +98,7 @@ class Map:
         elif yChange < 0:
             # South to North
             direction = 6
-
-        print("We have a flow: " + self._constants.RiverDescriptions[direction])
-        print("x: " +str(lowestAdjacentCell[0]) + " y: " + str(lowestAdjacentCell[1]) + " d: " + str(direction))
-      
+     
         # Update the river map
         self._riverMap[x][y] = direction
 
@@ -263,7 +260,7 @@ class Map:
 if __name__ == "__main__":
     # Perform Self-Test
     # Create Map
-    m =  Map(30)
+    m =  Map(80)
     m.SaveToFile()
     """
 
