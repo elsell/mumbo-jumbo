@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 """
-Class to hold constant values
+Class to hold constant values, basically a settings class
 (Mostly maps between numeric values and descriptions)
 
 Created by John Sell
@@ -11,6 +11,12 @@ Created by John Sell
 class Constants:
     def __init__(self):
         pass
+
+    # True: Rivers flow to lowest adjacent cell
+    # False: Rivers flow to highgest-lowest adjacent cell
+    @property
+    def RealisticRiverFlow(self):
+        return False
 
     # This property relates to the 'smoothness' of the generated map
     @property

@@ -11,15 +11,19 @@ Created by John Sell
 from constants import Constants
 import random
 import json
+import time
 import copy
-from sys import getsizeof
+from sys import getsizeof, argv
 
 class Map:
-    def __init__(self, size):  
+    def __init__(self, size, seed = None):  
         if(size < 1):
             raise ValueError(
                 "Map size must be greater than 0 (Provided " + str(size) + ")"
             )
+
+        if seed is not None:
+            random.seed(seed)
 
         # Get us some constants!
         self._constants = Constants()
@@ -72,6 +76,21 @@ class Map:
             if adjacentCellHeight < lowestAdjacentCellHeight:
                 lowestAdjacentCellHeight = adjacentCellHeight
                 lowestAdjacentCell = cellCoords
+
+        # Find highest of lowest adjacent cells  
+        if not self._constants.RealisticRiverFlow:
+            for cellCoords in adjacentCells:
+                try:
+                    if cellCoords[0] < 0 or cellCoords[1] < 0:
+                        continue
+                    adjacentCellHeight = tempArr[cellCoords[0]][cellCoords[1]]
+                except:
+                    # We've gone outside of the map...just skip this cell
+                    continue
+                if adjacentCellHeight > lowestAdjacentCellHeight and adjacentCellHeight < curCellHeight:
+                    lowestAdjacentCellHeight = adjacentCellHeight
+                    lowestAdjacentCell = cellCoords
+
         
         # If there are no adjacent cells that are lower, we give up!
         # No sense in building a river where this is no downward slope...it'd be a lake!
@@ -260,7 +279,19 @@ class Map:
 if __name__ == "__main__":
     # Perform Self-Test
     # Create Map
-    m =  Map(30)
+    mapSize = 30
+    mapSeed = int(time.time() * 10000000 * random.random())
+
+    if len(argv) > 1:
+        mapSize = int(argv[1])
+        if len(argv) > 2:
+            mapSeed = int(argv[2])
+
+    print("Generating map...")
+    print("Size: " + str(mapSize) + "x" + str(mapSize))
+    print("Seed: " + str(mapSeed))
+
+    m =  Map(mapSize, mapSeed)
     m.SaveToFile()
     """
 
