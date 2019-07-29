@@ -21,6 +21,8 @@ class Enemy:
         self._minTime   = minTime
         self._maxTime   = maxTime
 
+    
+
     # Property Getters
     @property
     def Name(self):
