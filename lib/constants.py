@@ -17,7 +17,6 @@ class Constants:
     def SpreadSize(self):
         return 16
 
-
     @property
     def HeightDescriptions(self):
         return{
@@ -31,6 +30,34 @@ class Constants:
             7: "a mountainside",
             8: "a mountain",
             9: "Most Certainly In Space",
+        }
+
+
+    @property
+    def NoMovement(self):
+        return 0
+    @property
+    def North(self):
+        return 1
+    @property
+    def South(self):
+        return 2
+    @property
+    def East(self):
+        return 3
+    @property
+    def West(self):
+        return 4
+
+    @property
+    def PlayerDefaults(self):
+        return{
+            "hp"    : 0,
+            "maxHp" : 1,
+            "attack": 2,
+            "noise" : 3,
+            "speed" : 4,
+            "sneak" : 5
         }
 
     @property
