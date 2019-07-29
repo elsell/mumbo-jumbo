@@ -26,6 +26,8 @@ class Game:
 
         self._playerInCombat = False
         self._playerMovementDirection = self._C.NoMovement
+
+    
         
 
 if __name__ == "__main__":
