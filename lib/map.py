@@ -11,8 +11,9 @@ Created by John Sell
 from constants import Constants
 import random
 import json
+from sys import getsizeof
 
-
+random.seed(1234)
 class Map:
     def __init__(self, size):  
         if(size < 1):
@@ -44,7 +45,7 @@ class Map:
         maxHeight = heightBound
         minHeight = -heightBound
 
-        for time in range(0,4):
+        for time in range(0,3):
             # Ensure sSize is indeed an integer
             sSize = int(sSize)
 
@@ -113,6 +114,7 @@ class Map:
             "locationMap": self._locMap,
             "treeMap": self._treeMap
         }
+        
         with open(filename, 'w') as file:
             file.write(json.dumps(obj))
 
@@ -121,7 +123,7 @@ class Map:
 if __name__ == "__main__":
     # Perform Self-Test
     # Create Map
-    m =  Map(50)
+    m =  Map(25)
     m.SaveToFile()
     """
 
