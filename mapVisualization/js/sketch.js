@@ -1,4 +1,5 @@
 mapHeights = [];
+mapTrees = []
 mapSize = 0;
 CELL_SIZE = 20;
 HEIGHT_SCALAR = 5;
@@ -14,6 +15,20 @@ COLORS =
     "#a6a7f7", // Mountain Side
     "#a1a1a1", // Mountain Top
     "#f0fcff", // Clouds
+];
+FOLIAGE_COLORS = 
+[
+    "#bdb76b", 
+    "#8fbc8f", 
+    "#556b2f", 
+    "#006400", 
+    "#228b22",
+    "#696969",  
+    "#755c0f", 
+    "#008000", 
+    "#fffacd", 
+    "#f0e68c", 
+
 ];
 
 let VIEWS = {
@@ -67,22 +82,35 @@ function draw() {
         for(var y = 0; y < mapSize; y++)
         {
             push();
-            var curCellHeight = mapHeights[x][y]
+            var curCellHeight = mapHeights[x][y];
             if(x == 0 && y == 0)
             {
                 fill("#ff0000");
             }
             else
             {
-                colorStr = COLORS[int(curCellHeight)]
-                fill(colorStr)
+                colorStr = COLORS[int(curCellHeight)];
+                fill(colorStr);
             }
 
-            stroke(1)
-            strokeWeight(1)
+            stroke(1);
+            strokeWeight(1);
             var boxHeight = curCellHeight * HEIGHT_SCALAR;
             translate(x * CELL_SIZE,boxHeight * -.5,y * CELL_SIZE);
             box(CELL_SIZE, boxHeight, CELL_SIZE);
+
+            // Draw Trees
+            var numTrees = mapTrees[x][y];
+            if(numTrees > 0)
+            {
+                var treeHeight = CELL_SIZE * numTrees * .7
+                translate(0,-boxHeight * .5 - treeHeight * .5 ,0);
+                translate(0,0,0);
+    
+                colorStr = FOLIAGE_COLORS[int(curCellHeight)];
+                fill(colorStr);
+                box(CELL_SIZE * .25,  treeHeight,CELL_SIZE * .25);
+            }
             pop();
         }
         pop();
@@ -96,6 +124,7 @@ function LoadMap(data)
     clear();
     mapSize = data["heightMap"].length;
     mapHeights = data["heightMap"];
+    mapTrees = data["treeMap"];
 
     // This ensures the map always fills the viewing window
     CELL_SIZE = 1800 / mapSize;

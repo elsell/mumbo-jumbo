@@ -6,7 +6,8 @@ Written by John Sell
 
 """
 
-directions = ["north", "north-west", "west", "south-west", "south", "south-east", "east", "north-east"]
+#directions = ["north", "north-west", "west", "south-west", "south", "south-east", "east", "north-east"]
+directions = ["north",  "west",  "south", "east"]
 
 output = ""
 
