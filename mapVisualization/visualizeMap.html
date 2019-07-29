@@ -5,16 +5,26 @@
 
   </head>
   <body>
+    <style>
+      #key
+      {
+        display: flex;
+        flex-direction: row;
+      }
+      canvas{ width: 90% !important;height: 80% !important;}
+      .color{        border: solid 2px black;
+}
+    </style>
     <div id="upload">
             <label>Select Board Layout File:</label>
-            <input type="file" id="fileInput">   
-    
+            <input type="file" id="fileInput"> 
+            <input type="button" value="Save Image" onclick="SaveImage()">  
+            
                             
-            <div id="info">
-                <p>After selecting a file, click the buttons below to view a board state.</p>
+            <div id="views">
             </div>
         </div>
         <script src="js/sketch.js"></script>
-
+        <div id="key"></div>
   </body>
 </html>
