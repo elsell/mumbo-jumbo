@@ -96,7 +96,7 @@ function draw() {
             }
 
             // Draw Terrain
-            stroke(1);
+            stroke("#0e0e0e");
             strokeWeight(1);
             var boxHeight = curCellHeight * HEIGHT_SCALAR;
             translate(y * CELL_SIZE,boxHeight * -.5,x * CELL_SIZE);

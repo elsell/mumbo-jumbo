@@ -8,6 +8,8 @@ Created by John Sell
 07 25 2019
 """
 
+VERBOSE = True
+
 class Constants:
     def __init__(self):
         pass
@@ -31,7 +33,7 @@ class Constants:
     # Chance that a river spawns on a > MinRiverSpawnHeight height cell
     @property
     def RiverSpawnChance(self):
-        return .25
+        return .2
 
     @property
     def HeightDescriptions(self):
@@ -163,7 +165,7 @@ class Constants:
             9: "from east to north",
             10: "from east to west",
             11: "from east to south",
-            12: "a puddle"
+            12: "a lake"
         }
 
     

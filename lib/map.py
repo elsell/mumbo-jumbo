@@ -8,7 +8,7 @@ Created by John Sell
 
 """
 
-from constants import Constants
+from constants import Constants, VERBOSE
 import random
 import json
 import time
@@ -31,6 +31,9 @@ class Map:
         # Create and initialize member variables
         self._size = size
 
+        if(VERBOSE):
+            print("Initializing Blank Map...")
+
         self._heightMap = [ [ 0 for y in range( size ) ] for x in range( size ) ]
 
         self._riverMap  = [ [ 0 for y in range( size ) ] for x in range( size ) ]
@@ -38,6 +41,9 @@ class Map:
         self._locMap    = [ [ 0 for y in range( size ) ] for x in range( size ) ]
 
         self._treeMap   = [ [ 0 for y in range( size ) ] for x in range( size ) ]
+
+        if(VERBOSE):
+            print("Done.")
 
         # Now we shall generate our map
         self._GenerateMap()
@@ -126,6 +132,12 @@ class Map:
                 
 
     def _GenerateRiverMap(self):
+        if(VERBOSE):
+            print("Generating River Map...")
+
+        totalCells = self._size * self._size
+        completedCells = 0
+
         # Load elevation map into a temporary array so we can mess with it ;)
         tempArr = copy.deepcopy(self._heightMap)
 
@@ -137,6 +149,11 @@ class Map:
                 if curCellHeight > self._constants.MinRiverSpawnHeight:
                     if random.random() < self._constants.RiverSpawnChance:
                         self._TraceRiverPath(x, y, tempArr)
+            if(VERBOSE):
+                completedCells = completedCells + self._size
+                print("Progress: " + str(completedCells) + " of " + str(totalCells) + " cells", end="\r")
+        if(VERBOSE):
+            print("\nGeneration Complete.\n")                        
 
 
                         
@@ -144,9 +161,14 @@ class Map:
                         
 
     def _GenerateTreeMap(self):
+        if(VERBOSE):
+            print("Generating Tree Map...")
+
         sSize = self._constants.SpreadSize
         heightBound = float(len(self._constants.TreeDescriptions) - 1)
         maxHeight = heightBound
+        totalCells = self._size * self._size * 4 * 3 + pow(self._size + sSize + 1, 2)
+        completedCells = 0
 
         for time in range(0,3):
             # Ensure sSize is indeed an integer
@@ -156,8 +178,12 @@ class Map:
             tempArr = [ [ 0 for y in range( self._size + sSize + 1) ] for x in range( self._size + sSize + 1) ]
             
             for x in range(0, self._size + sSize + 1):
-                for y in range(0, self._size + 1):
+                for y in range(0, self._size + sSize + 1):
                     tempArr[x][y] = random.uniform(-heightBound + 4.5, heightBound - 3) 
+                if(VERBOSE):
+                    completedCells = completedCells + self._size + sSize + 1
+                    print("Progress: " + str(completedCells) + " of " + str(totalCells) + " cells", end="\r")
+
 
             # Horizontal Interpolation
             for x in range(0, self._size):
@@ -167,6 +193,9 @@ class Map:
                     val1 = float(tempArr[x][yCoord + sSize])
                     val2 = float(tempArr[x][yCoord])
                     tempArr[x][y] = val1 * multiplier + val2 * (1 - multiplier)
+                if(VERBOSE):
+                    completedCells = completedCells + self._size
+                    print("Progress: " + str(completedCells) + " of " + str(totalCells) + " cells", end="\r")
 
             # Vertical Interpolation
             for x in range(0, self._size):
@@ -175,7 +204,10 @@ class Map:
                     multiplier = float(x % sSize) / sSize
                     val1 = float(tempArr[xCoord + sSize][y])
                     val2 = float(tempArr[xCoord][y])
-                    tempArr[x][y] = val1 * multiplier + val2 * (1 - multiplier)     
+                    tempArr[x][y] = val1 * multiplier + val2 * (1 - multiplier)   
+                if(VERBOSE):
+                    completedCells = completedCells + self._size
+                    print("Progress: " + str(completedCells) + " of " + str(totalCells) + " cells", end="\r")  
   
 
             # Add to Map
@@ -192,15 +224,27 @@ class Map:
                         self._treeMap[x][y] = 0
                     if(self._heightMap[x][y] < 1):
                         self._treeMap[x][y] = 0
+                if(VERBOSE):
+                    completedCells = completedCells + self._size
+                    print("Progress: " + str(completedCells) + " of " + str(totalCells) + " cells", end="\r")
             
             # Modify Parameters for the Next Pass
             maxHeight = maxHeight * .5
             sSize     = sSize     * .5
+        if(VERBOSE):
+            print("\nGeneration Complete.\n")            
 
     def _GenerateHeightMap(self):
+        if(VERBOSE):
+            print("Generating Height Map...")
+
         sSize = self._constants.SpreadSize
         heightBound = float(len(self._constants.HeightDescriptions) - 1)
         maxHeight = heightBound
+
+        totalCells = self._size * self._size * 4 * 3 + pow(self._size + sSize + 1, 2)
+        completedCells = 0
+
 
         for time in range(0,3):
             # Ensure sSize is indeed an integer
@@ -210,8 +254,11 @@ class Map:
             tempArr = [ [ 0 for y in range( self._size + sSize + 1) ] for x in range( self._size + sSize + 1) ]
             
             for x in range(0, self._size + sSize + 1):
-                for y in range(0, self._size + 1):
+                for y in range(0, self._size + sSize + 1):
                     tempArr[x][y] = random.uniform(-heightBound + 4.5, heightBound - 3) 
+                if(VERBOSE):
+                    completedCells = completedCells + self._size + sSize + 1
+                    print("Progress: " + str(completedCells) + " of " + str(totalCells) + " cells", end="\r")
 
             # Horizontal Interpolation
             for x in range(0, self._size):
@@ -221,6 +268,9 @@ class Map:
                     val1 = float(tempArr[x][yCoord + sSize])
                     val2 = float(tempArr[x][yCoord])
                     tempArr[x][y] = val1 * multiplier + val2 * (1 - multiplier)
+                if(VERBOSE):
+                    completedCells = completedCells + self._size
+                    print("Progress: " + str(completedCells) + " of " + str(totalCells) + " cells", end="\r")
 
             # Vertical Interpolation
             for x in range(0, self._size):
@@ -230,6 +280,9 @@ class Map:
                     val1 = float(tempArr[xCoord + sSize][y])
                     val2 = float(tempArr[xCoord][y])
                     tempArr[x][y] = val1 * multiplier + val2 * (1 - multiplier)     
+                if(VERBOSE):
+                    completedCells = completedCells + self._size
+                    print("Progress: " + str(completedCells) + " of " + str(totalCells) + " cells", end="\r")
   
 
             # Add to Map
@@ -242,10 +295,16 @@ class Map:
                         self._heightMap[x][y] = heightBound
                     if(self._heightMap[x][y] < 0):
                         self._heightMap[x][y] = 0
+                if(VERBOSE):
+                    completedCells = completedCells + self._size
+                    print("Progress: " + str(completedCells) + " of " + str(totalCells) + " cells", end="\r")
             
             # Modify Parameters for the Next Pass
             maxHeight = maxHeight * .5
             sSize     = sSize     * .5
+
+        if(VERBOSE):
+            print("\nGeneration Complete.\n")            
                        
 
     ## DESCRIPTION GETTERS ##
