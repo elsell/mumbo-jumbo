@@ -14,6 +14,16 @@ class Constants:
     def __init__(self):
         pass
 
+    # Mountain Frequency Modifier (1 = Most, 0 = Least)
+    @property
+    def MountainFrequency(self):
+        return 0.8
+
+    # Sea Frequency Modifier (1 = Most, 0 = Least)
+    @property
+    def SeaFrequency(self):
+        return 0.4
+
     # True: Rivers flow to lowest adjacent cell
     # False: Rivers flow to highgest-lowest adjacent cell
     @property

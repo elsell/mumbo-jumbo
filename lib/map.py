@@ -255,7 +255,7 @@ class Map:
             
             for x in range(0, self._size + sSize + 1):
                 for y in range(0, self._size + sSize + 1):
-                    tempArr[x][y] = random.uniform(-heightBound + 4.5, heightBound - 3) 
+                    tempArr[x][y] = random.uniform(self._constants.SeaFrequency * (-heightBound + 4.5), self._constants.MountainFrequency * (heightBound - 3)) 
                 if(VERBOSE):
                     completedCells = completedCells + self._size + sSize + 1
                     print("Progress: " + str(completedCells) + " of " + str(totalCells) + " cells", end="\r")
