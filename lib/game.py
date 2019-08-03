@@ -10,9 +10,16 @@ the Game!
 
 from map import Map
 from constants import Constants
+from player import Player
+from speechEngine import SpeechEngine, Question
+
+SE = SpeechEngine()
 
 class Game:
     def __init__(self, mapSize):
+        self._isPaused = False
+        self._isQuit   = False
+
         self._map = Map(mapSize)
         self._C = Constants()
 
@@ -24,8 +31,72 @@ class Game:
 
         self._attack = False
 
+        self._player = Player()
+        self._playerEngaged = False
         self._playerInCombat = False
         self._playerMovementDirection = self._C.NoMovement
+
+    def Start(self):
+        while not self._isQuit:
+            # Handle Game Pause
+            while self._isPaused:
+                # TODO: Read external pause input to 'unpause' game
+                self._isPaused = False
+            
+            # Perform 1 player and 1 enemy ply
+            self._DoPly()
+
+
+        
+
+
+    def _DoPly(self):
+        command = SE.AskQuestion(Question("", []), True)
+
+        if self._playerTurn and self._playerMovementDirection is self._C.NoMovement:
+            self._UpdateMap()
+
+        # Player Movement
+        if self._playerTurn:
+            self._HandlePlayerMove(command)
+        else:
+            # See if the player should become engaged with an enemy 
+            if not self._attack:
+                self._CheckForEngagement()
+            else:
+                if self._playerEngaged:
+                    self._HandleEngagement()
+                else:
+                    self._HandleSurpriseEngagement()
+                if self._playerEngaged:
+                    self.HandleEnemyAttack()
+        
+        
+
+
+    # Spawn Enemies and Such
+    def _UpdateMap(self):
+        pass
+
+    # Given a command, move the player
+    def _HandlePlayerMove(self, command):
+        pass
+
+    # Determine if player should be engaged with an enemy
+    def _CheckForEngagement(self):
+        pass
+
+    # Handle player -> enemy combat
+    def _HandleEngagement(self):
+        pass
+
+    # Handle (sneaky) player -> enemy combat
+    def _HandleSurpriseEngagement(self):
+        pass
+
+    # Enemies must fight back!
+    def HandleEnemyAttack(self):
+        pass
 
     
         
