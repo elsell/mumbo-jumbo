@@ -119,7 +119,6 @@ class SpeechEngine:
                 # If not quit here, the spoken phrase does not match the 
                 # response anticipated. Tell the user!
                 self.SpeakText("What was that again?")
-        print("QUIT: " + str(quit))
 
         return response
 

@@ -160,5 +160,5 @@ class Game:
         
 
 if __name__ == "__main__":
-    g = Game(10)
+    g = Game(1000)
     g.Start()
