@@ -10,7 +10,7 @@ the Game!
 
 import random
 from map import Map
-from constants import Constants, Clamp
+from constants import Constants, Clamp, VERBOSE
 from player import Player
 from speechEngine import SpeechEngine, Question
 
@@ -55,8 +55,15 @@ class Game:
 
 
     def _DoPly(self):
-        command = SE.AskQuestion(Question("", []), True)
+        if VERBOSE:
+            print("\n\n-= Accepting Command =-")
+        command = SE.AskQuestion(Question("", [
+            ["go"],
+            ["north", "south", "east", "west"]
+        ]), True)
 
+        if VERBOSE:
+            print("Player Command: " + command)
         if self._playerTurn and self._playerMovementDirection is self._C.NoMovement:
             self._UpdateMap()
 
@@ -80,6 +87,8 @@ class Game:
 
     # Spawn Enemies and Such
     def _UpdateMap(self):
+        if VERBOSE:
+            print("Updating Map...")
         #Create 5x5 area around player in which to spawn enemies and such
         xLow  = self._playerPosition["x"] - 2
         xHigh = self._playerPosition["x"] + 2 
@@ -124,26 +133,32 @@ class Game:
 
     # Given a command, move the player
     def _HandlePlayerMove(self, command):
-        pass
+        if VERBOSE:
+            print("Handling Player Move...")
 
     # Determine if player should be engaged with an enemy
     def _CheckForEngagement(self):
-        pass
+        if VERBOSE:
+            print("Checking For Engagement...")
 
     # Handle player -> enemy combat
     def _HandleEngagement(self):
-        pass
+        if VERBOSE:
+            print("Handling Engagement...")
 
     # Handle (sneaky) player -> enemy combat
     def _HandleSurpriseEngagement(self):
-        pass
+        if VERBOSE:
+            print("Handling Surprise Engagement...")
 
     # Enemies must fight back!
     def HandleEnemyAttack(self):
-        pass
+        if VERBOSE:
+            print("Handling Enemy Attack...")
 
     
         
 
 if __name__ == "__main__":
     g = Game(10)
+    g.Start()

@@ -7,6 +7,7 @@ Created by John Sell
 SpeechRecognition and TTS Facilitator
 """
 import os
+from constants import VERBOSE
 from pocketsphinx import LiveSpeech, get_model_path
 
 
@@ -19,6 +20,18 @@ class Question:
 
         # Number of words in anticipated response
         self._responseLen = len(responses)
+
+
+        # Ensure all lists are equal in length
+        longestList = 0
+        # Find longest list
+        for response in self._responses:
+            if len(response) > longestList:
+                longestList = len(response)
+
+        # Ensure all lists are of length longestLength
+        for idx, response in enumerate(self._responses, start = 0):
+            self._responses[idx] = response[:longestList] + [""] * (longestList - len(response))        
 
     @property
     def Message(self):
@@ -45,7 +58,8 @@ class SpeechEngine:
     def AskQuestion(self, question, isSilent = False):
         if not isinstance(question, Question):
             raise TypeError("AskQuestion takes a Question object")
-        
+       
+       
         if not isSilent:
             self.SpeakText(question.Message)
 
@@ -65,6 +79,8 @@ class SpeechEngine:
         tries = 1
         response = ""
         for phrase in speech:
+            if VERBOSE:
+                print(question.Responses)
             response = ""
             if quit:
                 speech.end_utt()
@@ -72,13 +88,18 @@ class SpeechEngine:
                 break
 
             words = str(phrase).split(" ")
-            print(words)
+
+            if VERBOSE:
+                print(words)
 
             numWords = 0
             for wordPosition in question.Responses:
                 isAMatch = False
 
                 for word in wordPosition:
+                    if numWords >= len(words):
+                        break
+
                     if words[numWords] == word:
                         isAMatch = True
                         response += words[numWords] + " "
