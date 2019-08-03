@@ -65,6 +65,8 @@ class Game:
 
         command = ""
         if self._playerTurn:
+            self._UpdateMap()
+
             if VERBOSE:
                 print("\n\n-= Accepting Command =-")
             command = SE.AskQuestion(Question("", [
@@ -176,6 +178,7 @@ class Game:
     # Handle (sneaky) player -> enemy combat
     def _HandleSurpriseEngagement(self):
         # Note: this should set engaged to true
+        # Also, this should check if enemy is actually there
         if VERBOSE:
             print("Handling Surprise Engagement...")
 
