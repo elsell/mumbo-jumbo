@@ -62,33 +62,36 @@ class Game:
 
 
     def _DoPly(self):
-        if VERBOSE:
-            print("\n\n-= Accepting Command =-")
-        command = SE.AskQuestion(Question("", [
-            ["go"],
-            ["north", "south", "east", "west"]
-        ]), True)
 
-        if VERBOSE:
-            print("Player Command: " + command)
-        if self._playerTurn and self._playerMovementDirection is self._C.NoMovement:
-            self._UpdateMap()
-
-        # Player Movement
+        command = ""
         if self._playerTurn:
-            self._HandlePlayerMove(command)
+            if VERBOSE:
+                print("\n\n-= Accepting Command =-")
+            command = SE.AskQuestion(Question("", [
+                ["go"],
+                ["north", "south", "east", "west"]
+            ]), True)
+
+            if VERBOSE:
+                print("Player Command: " + command)  
         else:
-            # See if the player should become engaged with an enemy 
-            if not self._attack:
+            if self._playerMovementDirection is not self._C.NoMovement:
                 self._CheckForEngagement()
-            else:
+                self._HandlePlayerMove(command)   
+
+            if self._attack:
+
                 if self._playerEngaged:
                     self._HandleEngagement()
                 else:
                     self._HandleSurpriseEngagement()
-                if self._playerEngaged:
-                    self.HandleEnemyAttack()
-        
+            
+            if self._playerEngaged:
+                self.HandleEnemyAttack()
+
+            # TODO: Read Description
+            self._playerTurn = True
+       
         
 
 
@@ -149,9 +152,7 @@ class Game:
 
         # Ensure max chance of engagement is 50%
         self._turnsSinceEngagement = Clamp(self._turnsSinceEngagement, 0, 10)
-        
-        # TODO: Figure out why this is here
-        self._enemyMove = self._enemyMove - 1
+
 
         
         
@@ -174,6 +175,7 @@ class Game:
 
     # Handle (sneaky) player -> enemy combat
     def _HandleSurpriseEngagement(self):
+        # Note: this should set engaged to true
         if VERBOSE:
             print("Handling Surprise Engagement...")
 
