@@ -12,6 +12,7 @@ import random
 from map import Map
 from constants import Constants, Clamp, VERBOSE
 from player import Player
+import enemy
 from speechEngine import SpeechEngine, Question
 
 SE = SpeechEngine()
@@ -20,6 +21,9 @@ class Game:
     def __init__(self, mapSize):
         self._isPaused = False
         self._isQuit   = False
+
+        # 1 = 1 Hour, Every turn is an hour
+        self._timeOfDay = 0
 
         self._map = Map(mapSize)
         self._C = Constants()
@@ -49,6 +53,9 @@ class Game:
             
             # Perform 1 player and 1 enemy ply
             self._DoPly()
+
+            # Update the time of day (1 hour / turn)
+            self._timeOfDay = self._timeOfDay + 1
 
 
         
@@ -113,8 +120,23 @@ class Game:
                 if not (self._playerPosition["x"] == x and self._playerPosition["y"] == y):
                     randomChance = 20 - self._turnsSinceEngagement
                     if randomChance == random.randrange(0, randomChance, 1):
-                        # TODO: Search for valid enemies and add them to the map
-                        pass
+                        validEnemies = []
+                        # Find Valid Enemies
+                        for en in enemy.ENEMIES:
+                            if (
+                                en.CanSpawnAt(
+                                    self._map._heightMap[x][y],
+                                     self._map._riverMap[x][y],
+                                     self._map._treeMap[x][y],
+                                     self._timeOfDay
+                                )):
+                                validEnemies.append(en)
+                        # Randomly choose an enemy
+                        if len(validEnemies) > 0:
+                            randEnemy = random.randrange(0, len(validEnemies) - 1)
+                            self._map._enemyMap[x][y] = validEnemies[randEnemy]
+                        
+
 
         # If the player is on an enemy, reset turnsSinceEngagement
         if self._map._enemyMap[self._playerPosition["x"]][self._playerPosition["y"]] != 0:

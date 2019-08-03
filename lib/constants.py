@@ -163,7 +163,7 @@ class Constants:
     @property
     def RiverDescriptions(self):
         return{
-            0: "from north to west",
+            0: "no river",
             1: "from north to south",
             2: "from north to east",
             3: "from west to north",
