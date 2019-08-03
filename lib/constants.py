@@ -179,3 +179,5 @@ class Constants:
         }
 
     
+def Clamp(n, lowBound, highBound):
+    return max(0, min(n, highBound))

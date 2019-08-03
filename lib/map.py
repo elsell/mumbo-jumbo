@@ -42,6 +42,8 @@ class Map:
 
         self._treeMap   = [ [ 0 for y in range( size ) ] for x in range( size ) ]
 
+        self._enemyMap  = [ [ 0 for y in range( size ) ] for x in range( size ) ]
+
         if(VERBOSE):
             print("Done.")
 
