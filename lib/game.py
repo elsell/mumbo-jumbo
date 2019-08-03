@@ -118,8 +118,9 @@ class Game:
         for x in range(xLow, xHigh):
             for y in range(yLow, yHigh):
                 if not (self._playerPosition["x"] == x and self._playerPosition["y"] == y):
-                    randomChance = 20 - self._turnsSinceEngagement
-                    if randomChance == random.randrange(0, randomChance, 1):
+                    chance = ((20 - self._turnsSinceEngagement)/20 )*100
+                    randomChoice = random.randrange(0, 100)
+                    if randomChoice <= chance:
                         validEnemies = []
                         # Find Valid Enemies
                         for en in enemy.ENEMIES:
@@ -130,6 +131,8 @@ class Game:
                                      self._map._treeMap[x][y],
                                      self._timeOfDay
                                 )):
+                                if VERBOSE:
+                                    print("Spawning a " + en.Name)
                                 validEnemies.append(en)
                         # Randomly choose an enemy
                         if len(validEnemies) > 0:
@@ -157,6 +160,7 @@ class Game:
     def _HandlePlayerMove(self, command):
         if VERBOSE:
             print("Handling Player Move...")
+        
 
     # Determine if player should be engaged with an enemy
     def _CheckForEngagement(self):
@@ -182,5 +186,7 @@ class Game:
         
 
 if __name__ == "__main__":
-    g = Game(1000)
+    g = Game(100)
+    g._map.SaveToFile("curGame.data")
     g.Start()
+
