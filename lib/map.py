@@ -42,7 +42,7 @@ class Map:
 
         self._treeMap   = [ [ 0 for y in range( size ) ] for x in range( size ) ]
 
-        self._enemyMap  = [ [ 0 for y in range( size ) ] for x in range( size ) ]
+        self._enemyMap  = [ [ None for y in range( size ) ] for x in range( size ) ]
 
         if(VERBOSE):
             print("Done.")
@@ -323,7 +323,8 @@ class Map:
             "heightMap": self._heightMap,
             "riverMap": self._riverMap,
             "locationMap": self._locMap,
-            "treeMap": self._treeMap
+            "treeMap": self._treeMap,
+            "enemyMap": self._enemyMap
         }
         
         with open(filename, 'w') as file:

@@ -7,9 +7,10 @@ Created by John Sell
 * And then there were enemies *
 """
 
-class Enemy:
+class Enemy(dict):
     def __init__(self, name, hp, attack, hear, speed, minHeight, maxHeight,
                     river, tree, minTime, maxTime):
+        dict.__init__(self, name=name)
         self._name      = name
         self._hp        = hp
         self._attack    = attack

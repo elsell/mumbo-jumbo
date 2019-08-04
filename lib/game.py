@@ -146,6 +146,8 @@ class Game:
     def _UpdateMap(self):
         if VERBOSE:
             print("Updating Map...")
+            self._map.SaveToFile("game_debug_map.data")
+            print("TSE: " + str(self._turnsSinceEngagement))
         #Create 5x5 area around player in which to spawn enemies and such
         xLow  = self._playerPosition["x"] - 2
         xHigh = self._playerPosition["x"] + 2 
@@ -158,19 +160,22 @@ class Game:
         yLow  = int(Clamp(yLow,  0, self._map._size))
         yHigh = int(Clamp(yHigh, 0, self._map._size))
 
+        px = int(self._playerPosition["x"])
+        py = int(self._playerPosition["y"])
+
         # Clear Enemy Map
         for x in range(0, self._map._size):
             for y in range(0, self._map._size):
-                if not (self._playerPosition["x"] == x and self._playerPosition["y"] == y):
-                    self._map._enemyMap[x][y] = 0
+                if not (px == x and py == y):
+                    self._map._enemyMap[x][y] = None
 
         # Spawn new Enemies
         for x in range(xLow, xHigh):
             for y in range(yLow, yHigh):
-                if not (self._playerPosition["x"] == x and self._playerPosition["y"] == y):
+                if not (px == x and py == y):
                     chance = ((20 - self._turnsSinceEngagement)/20 )*100
                     randomChoice = random.randrange(0, 100)
-                    if randomChoice <= chance:
+                    if randomChoice > chance:
                         validEnemies = []
                         # Find Valid Enemies
                         for en in enemy.ENEMIES:
@@ -181,8 +186,6 @@ class Game:
                                      self._map._treeMap[x][y],
                                      self._timeOfDay
                                 )):
-                                if VERBOSE:
-                                    print("Spawning a " + en.Name)
                                 validEnemies.append(en)
                         # Randomly choose an enemy
                         if len(validEnemies) > 0:
@@ -190,11 +193,13 @@ class Game:
                             if len(validEnemies) > 1:
                                 randEnemy = random.randrange(0, len(validEnemies) - 1)
                             self._map._enemyMap[x][y] = validEnemies[randEnemy]
+                            if VERBOSE:
+                                print("Spawning a " + validEnemies[randEnemy].Name)
                         
 
 
         # If the player is on an enemy, reset turnsSinceEngagement
-        if self._map._enemyMap[int(self._playerPosition["x"])][int(self._playerPosition["y"])] != 0:
+        if self._map._enemyMap[px][py] != None:
             self._turnsSinceEngagement = 0
         else:
             self._turnsSinceEngagement = self._turnsSinceEngagement + 1
@@ -227,7 +232,7 @@ class Game:
             print("Checking For Engagement...")
         
         if not self._playerEngaged:
-            if self._map._enemyMap[px][py] != 0:
+            if self._map._enemyMap[px][py] != None:
                 self._player._activeEnemy = self._map._enemyMap[px][py]
 
                 noise = self._player._stats["noise"] * (
@@ -271,7 +276,6 @@ class Game:
         
 
 if __name__ == "__main__":
-    g = Game(100)
-    g._map.SaveToFile("curGame.data")
+    g = Game(25)
     g.Start()
 
