@@ -1,0 +1,38 @@
+crouch K R AW CH
+stand S T AE N D
+sneak S N IY K
+go G OW
+north N AO R TH
+south S AW TH
+east IY S T
+west W EH S T
+northeast N AO R TH IY S T
+southeast S AW TH IY S T
+northwest N AO R TH W EH S T
+southwest S AW TH W EH S T
+attack AH T AE K
+head HH EH D
+body B AA D IY
+arms AA R M Z
+legs L EH G Z
+loot L UW T
+heal HH IY L
+equip IH K W IH P
+hands HH AE N D Z
+feet F IY T
+neck N EH K
+drop D R AA P
+drop(2) D R AO P
+take T EY K
+enter EH N T ER
+yes Y EH S
+yep Y EH P
+no N OW
+cancel K AE N S AH L
+help HH EH L P
+exit EH G Z IH T
+exit(2) EH K S AH T
+begin B IH G IH N
+describe D IH S K R AY B
+location L OW K EY SH AH N
+
