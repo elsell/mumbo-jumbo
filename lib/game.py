@@ -108,10 +108,10 @@ class Game:
         yHigh = self._playerPosition["y"] + 2
 
         # Clamp those values to the map size
-        xLow  = Clamp(xLow,  0, self._map._size)
-        xHigh = Clamp(xHigh, 0, self._map._size)
-        yLow  = Clamp(yLow,  0, self._map._size)
-        yHigh = Clamp(yHigh, 0, self._map._size)
+        xLow  = int(Clamp(xLow,  0, self._map._size))
+        xHigh = int(Clamp(xHigh, 0, self._map._size))
+        yLow  = int(Clamp(yLow,  0, self._map._size))
+        yHigh = int(Clamp(yHigh, 0, self._map._size))
 
         # Clear Enemy Map
         for x in range(0, self._map._size):
@@ -141,13 +141,15 @@ class Game:
                                 validEnemies.append(en)
                         # Randomly choose an enemy
                         if len(validEnemies) > 0:
-                            randEnemy = random.randrange(0, len(validEnemies) - 1)
+                            randEnemy = 0
+                            if len(validEnemies) > 1:
+                                randEnemy = random.randrange(0, len(validEnemies) - 1)
                             self._map._enemyMap[x][y] = validEnemies[randEnemy]
                         
 
 
         # If the player is on an enemy, reset turnsSinceEngagement
-        if self._map._enemyMap[self._playerPosition["x"]][self._playerPosition["y"]] != 0:
+        if self._map._enemyMap[int(self._playerPosition["x"])][int(self._playerPosition["y"])] != 0:
             self._turnsSinceEngagement = 0
         else:
             self._turnsSinceEngagement = self._turnsSinceEngagement + 1
