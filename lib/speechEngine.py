@@ -73,7 +73,7 @@ class SpeechEngine:
             full_utt=False,
             hmm=os.path.join(model_path, 'en-us'),
             lm=os.path.join(model_path, 'en-us.lm.bin'),
-            dic=os.path.join(model_path, 'johnsell-en-us.dict')
+            dic=os.path.join(os.path.dirname(os.path.abspath(__file__)),'johnsell-en-us.dict')
         )
         quit = False
         tries = 1
