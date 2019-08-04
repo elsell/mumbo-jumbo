@@ -1,6 +1,7 @@
 mapHeights = [];
 mapTrees = []
 mapRivers = []
+mapEnemies = []
 mapSize = 0;
 CELL_SIZE = 20;
 HEIGHT_SCALAR = 5;
@@ -41,12 +42,14 @@ let VIEWS = {
 let VIEW = VIEWS.corner;
 var c;
 function setup() {
-    height = 4080;
+    height = 3500;
+    width = height * 1.77;
+    alert(width)
     frameRate(20);
     p5.disableFriendlyErrors = true; // disables Friendly errors
 
     CreateViewSwitcher();
-    c = createCanvas(height * 1.7,height, WEBGL);
+    c = createCanvas(width,height, WEBGL);
 }
 
   
@@ -140,6 +143,20 @@ function draw() {
                 box(CELL_SIZE * .25,  treeHeight,CELL_SIZE * .25);
             }
             pop();
+
+            // Draw enemies
+            push();
+            var curEnemy = mapEnemies[x][y];
+            if(curEnemy !== null)
+            {
+                var treeHeight = CELL_SIZE * 15
+                translate(0,-boxHeight * .5 - treeHeight * .5 ,0);
+                translate(0,0,0);
+                
+                fill("#FF0000");
+                box(CELL_SIZE * .15,  treeHeight,CELL_SIZE * .15);
+            }
+            pop();
             pop();
         }
         pop();
@@ -155,6 +172,7 @@ function LoadMap(data)
     mapHeights = data["heightMap"];
     mapTrees = data["treeMap"];
     mapRivers = data["riverMap"];
+    mapEnemies = data["enemyMap"]
 
     // This ensures the map always fills the viewing window
     CELL_SIZE = 1800 / mapSize;
@@ -195,5 +213,5 @@ function CreateViewSwitcher()
 
 function SaveImage()
 {
-    saveCanvas(c, 'mapImage', 'png');
+    save(c, 'mapImage.png');
 }
