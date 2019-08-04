@@ -64,6 +64,10 @@ class SpeechEngine:
             self.SpeakText(question.Message)
 
         model_path = get_model_path()
+        dict_Path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                    'johnsell-en-us.dict')
+        if VERBOSE:
+            print("Loading Dictionary From: " + dict_Path)
 
         speech = LiveSpeech(
             verbose=False,
@@ -73,8 +77,9 @@ class SpeechEngine:
             full_utt=False,
             hmm=os.path.join(model_path, 'en-us'),
             lm=os.path.join(model_path, 'en-us.lm.bin'),
-            dic=os.path.join(os.path.dirname(os.path.abspath(__file__)),'johnsell-en-us.dict')
+            dic=dict_Path
         )
+
         quit = False
         tries = 1
         response = ""
