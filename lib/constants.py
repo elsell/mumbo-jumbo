@@ -79,6 +79,19 @@ class Constants:
         return 4
 
     @property
+    def Head(self):
+        return 1
+    @property
+    def Body(self):
+        return 2
+    @property
+    def Arms(self):
+        return 3
+    @property
+    def Legs(self):
+        return 4
+
+    @property
     def PlayerDefaults(self):
         return{
             "hp"    : 0,

@@ -125,7 +125,7 @@ class SpeechEngine:
                 # response anticipated. Tell the user!
                 self.SpeakText("What was that again?")
 
-        return response
+        return response.strip()
 
 
 

@@ -28,6 +28,8 @@ class Game:
         self._map = Map(mapSize)
         self._C = Constants()
 
+        self._description = ""
+
         self._playerTurn = False
         self._playerPosition = {
             "x": mapSize * .5,
@@ -40,6 +42,7 @@ class Game:
         self._turnsSinceEngagement = 0
 
         self._player = Player()
+        self._playerAttackTarget = None
         self._playerEngaged = False
         self._playerInCombat = False
         self._playerMovementDirection = self._C.NoMovement
@@ -58,28 +61,68 @@ class Game:
             self._timeOfDay = self._timeOfDay + 1
 
 
-        
-
+    def _ParseCommand(self, command):
+        if VERBOSE:
+            print("Parsing Command: " + command)
+        if command == "go north":
+            if self._playerPosition["y"] < self._map._size - 1 and \
+             not self._playerEngaged:
+                self._playerMovementDirection = self._C.North
+            else:
+                self._description = "you cannot go north"
+        elif command == "go west":
+            if self._playerPosition["x"] > 0 and not self._playerEngaged:
+                self._playerMovementDirection = self._C.West
+            else:                
+                self._description = "you cannot go west"
+        elif command == "go east":
+            if self._playerPosition["x"] < self._map._size - 1 and \
+             not self._playerEngaged:
+                self._playerMovementDirection = self._C.East
+            else:                
+                self._description = "you cannot go east"
+        elif command == "go south":
+            if self._playerPosition["y"] > 0 and not self._playerEngaged:
+                self._playerMovementDirection = self._C.South
+            else:                
+                self._description = "you cannot go south"     
+        elif command == "attack head":
+            self._attack = True
+            self._playerAttackTarget = self._C.Head
+        elif command == "attack body":
+            self._attack = True
+            self._playerAttackTarget = self._C.Body
+        elif command == "attack arms":
+            self._attack = True
+            self._playerAttackTarget = self._C.Arms
+        elif command == "attack legs":
+            self._attack = True
+            self._playerAttackTarget = self._C.Legs             
 
     def _DoPly(self):
+        if VERBOSE:
+            print("Player Turn: " + str(self._playerTurn))
 
-        command = ""
         if self._playerTurn:
+            self._playerTurn = False
             self._UpdateMap()
 
             if VERBOSE:
                 print("\n\n-= Accepting Command =-")
             command = SE.AskQuestion(Question("", [
-                ["go"],
-                ["north", "south", "east", "west"]
+                ["go", "attack"],
+                ["north", "south", "east", "west",
+                 "head",  "body",  "arms", "legs"]
             ]), True)
 
             if VERBOSE:
                 print("Player Command: " + command)  
+
+            self._ParseCommand(command)
         else:
             if self._playerMovementDirection is not self._C.NoMovement:
                 self._CheckForEngagement()
-                self._HandlePlayerMove(command)   
+                self._HandlePlayerMove()   
 
             if self._attack:
 
@@ -91,7 +134,9 @@ class Game:
             if self._playerEngaged:
                 self.HandleEnemyAttack()
 
-            # TODO: Read Description
+            SE.SpeakText(self._description)
+            self._description = ""
+
             self._playerTurn = True
        
         
@@ -156,21 +201,54 @@ class Game:
 
         # Ensure max chance of engagement is 50%
         self._turnsSinceEngagement = Clamp(self._turnsSinceEngagement, 0, 10)
-
-
+   
         
-        
-
-    # Given a command, move the player
-    def _HandlePlayerMove(self, command):
+    def _HandlePlayerMove(self):
         if VERBOSE:
             print("Handling Player Move...")
-        
+
+        if not self._playerEngaged:
+            if self._playerMovementDirection is not self._C.NoMovement:
+                if self._playerMovementDirection is self._C.North:
+                    self._playerPosition["y"] = self._playerPosition["y"] + 1
+                elif self._playerMovementDirection is self._C.West:
+                    self._playerPosition["x"] = self._playerPosition["x"] - 1
+                elif self._playerMovementDirection is self._C.South:
+                    self._playerPosition["y"] = self._playerPosition["y"] - 1        
+                elif self._playerMovementDirection is self._C.East:
+                    self._playerPosition["x"] = self._playerPosition["x"] + 1
 
     # Determine if player should be engaged with an enemy
     def _CheckForEngagement(self):
+        px = int(self._playerPosition["x"])
+        py = int(self._playerPosition["y"])
+
         if VERBOSE:
             print("Checking For Engagement...")
+        
+        if not self._playerEngaged:
+            if self._map._enemyMap[px][py] != 0:
+                self._player._activeEnemy = self._map._enemyMap[px][py]
+
+                noise = self._player._stats["noise"] * (
+                    .5 * self._player._stats["sneak"]
+                )
+                hear = self._player._activeEnemy.Hear
+
+                r = random.randrange(0, 100)
+                if noise <= .5 * hear:
+                    if r <= 25:
+                        self._playerEngaged = True
+                elif noise > .5 * hear and noise < hear:
+                    if r < 50:
+                        self._playerEngaged = True
+                elif noise >= hear:
+                    self._playerEngaged = True
+
+                if self._playerEngaged:
+                    self._description = "The " + self._player._activeEnemy.Name\
+                        + " blocks your path"
+                    
 
     # Handle player -> enemy combat
     def _HandleEngagement(self):
