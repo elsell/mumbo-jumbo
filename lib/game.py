@@ -279,7 +279,7 @@ class Game:
                 # East
                 if self._map._riverMap[px + 1][py] is not 0:
                     self._description = self._description + " you hear rushing"\
-                        "water to your east. " 
+                        "water to your east.  " 
 
             # Location Description                     
             if self._map._locMap[px][py] is not 0:
