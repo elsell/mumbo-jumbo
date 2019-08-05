@@ -226,7 +226,7 @@ class Game:
                 elif self._playerMovementDirection is self._C.West:
                     self._playerPosition["x"] = px - 1
                 elif self._playerMovementDirection is self._C.South:
-                    pyself._playerPosition["y"] = py - 1        
+                    self._playerPosition["y"] = py - 1        
                 elif self._playerMovementDirection is self._C.East:
                     self._playerPosition["x"] = px + 1
                 self._description = "you come to "
