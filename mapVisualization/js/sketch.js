@@ -1,3 +1,4 @@
+playerPos = []
 mapHeights = [];
 mapTrees = []
 mapRivers = []
@@ -44,7 +45,6 @@ var c;
 function setup() {
     height = 3500;
     width = height * 1.77;
-    alert(width)
     frameRate(20);
     p5.disableFriendlyErrors = true; // disables Friendly errors
 
@@ -131,14 +131,14 @@ function draw() {
 
             // Draw Trees
             push();
-            var numTrees = mapTrees[x][y];
+            var numTrees = int(mapTrees[x][y]);
             if(numTrees > 0) 
             {
                 var treeHeight = CELL_SIZE * numTrees * .7
                 translate(0,-boxHeight * .5 - treeHeight * .5 ,0);
                 translate(0,0,0);
     
-                colorStr = FOLIAGE_COLORS[int(curCellHeight)];
+                colorStr = FOLIAGE_COLORS[int(numTrees)];
                 fill(colorStr);
                 box(CELL_SIZE * .25,  treeHeight,CELL_SIZE * .25);
             }
@@ -157,6 +157,26 @@ function draw() {
                 box(CELL_SIZE * .15,  treeHeight,CELL_SIZE * .15);
             }
             pop();
+
+            // Draw Player Pos
+            push();
+
+            try
+            {
+                if(playerPos.x  == x && playerPos.y  == y)
+                {
+                    var treeHeight = CELL_SIZE * 15
+                    translate(0,-boxHeight * .5 - treeHeight * .5 ,0);
+                    fill("#00FFFF");
+                    box(CELL_SIZE * .15,  treeHeight,CELL_SIZE * .15);
+                }
+            }catch(e)
+            {
+                //console.error(e);
+            }
+            
+            
+            pop();
             pop();
         }
         pop();
@@ -173,6 +193,7 @@ function LoadMap(data)
     mapTrees = data["treeMap"];
     mapRivers = data["riverMap"];
     mapEnemies = data["enemyMap"]
+    playerPos = data["playerPosition"]
 
     // This ensures the map always fills the viewing window
     CELL_SIZE = 1800 / mapSize;
