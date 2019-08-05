@@ -33,8 +33,8 @@ class Game:
 
         self._playerTurn = False
         self._playerPosition = {
-            "x": mapSize * .5,
-            "y": mapSize * .5
+            "x": int(mapSize * .5),
+            "y": int(mapSize * .5)
         }
 
         self._attack = False
@@ -218,15 +218,91 @@ class Game:
             print("Handling Player Move...")
 
         if not self._playerEngaged:
+            px = self._playerPosition["x"]
+            py = self._playerPosition["y"]
             if self._playerMovementDirection is not self._C.NoMovement:
                 if self._playerMovementDirection is self._C.North:
-                    self._playerPosition["y"] = self._playerPosition["y"] + 1
+                    py = py + 1
                 elif self._playerMovementDirection is self._C.West:
-                    self._playerPosition["x"] = self._playerPosition["x"] - 1
+                    px = px - 1
                 elif self._playerMovementDirection is self._C.South:
-                    self._playerPosition["y"] = self._playerPosition["y"] - 1        
+                    py = py - 1        
                 elif self._playerMovementDirection is self._C.East:
-                    self._playerPosition["x"] = self._playerPosition["x"] + 1
+                    px = px + 1
+                self._description = "you come to "
+            else:
+                self._description = "you are in "
+
+            # Height Description
+            self._description = self._description + \
+                self._map.DescribeHeight(px, py) + ". "
+            
+            # Tree Description
+            if self._map._treeMap[px][py] is not 0:
+                self._description = self._description + "you are surrounded by "\
+                    + self._map.DescribeTrees(px,py) + ". "
+            else:
+                # North
+                if self._map._treeMap[px][py + 1] is not 0:
+                    self._description = self._description + " to your north are "\
+                        + self._map.DescribeTrees(px,py + 1) + ". "
+                # West
+                elif self._map._treeMap[px - 1][py] is not 0:
+                    self._description = self._description + " to your west are "\
+                        + self._map.DescribeTrees(px - 1,py) + ". "
+                # South 
+                elif self._map._treeMap[px][py - 1] is not 0:
+                    self._description = self._description + " to your south are "\
+                        + self._map.DescribeTrees(px,py - 1) + ". "
+                # East
+                if self._map._treeMap[px + 1][py] is not 0:
+                    self._description = self._description + " to your east are "\
+                        + self._map.DescribeTrees(px + 1,py) + ". "  
+
+            # River Description
+            if self._map._riverMap[px][py] is not 0:
+                self._description = self._description + " a stream, flowing "\
+                    + self._map.DescribeRiver(px,py) + " burbles nearby. "
+            else:
+                # North
+                if self._map._riverMap[px][py + 1] is not 0:
+                    self._description = self._description + " a stream, flowing "\
+                        + self._map.DescribeRiver(px,py + 1) + " burbles to your north. "
+                # West
+                elif self._map._riverMap[px - 1][py] is not 0:
+                    self._description = self._description + " a stream, flowing "\
+                        + self._map.DescribeRiver(px - 1,py) + "burbles to your west. "
+                # South 
+                elif self._map._riverMap[px][py - 1] is not 0:
+                    self._description = self._description + " a stream, flowing "\
+                        + self._map.DescribeRiver(px,py - 1) + "burbles to your south. "
+                # East
+                if self._map._riverMap[px + 1][py] is not 0:
+                    self._description = self._description + " a stream, flowing "\
+                        + self._map.DescribeRiver(px + 1,py) + "burbles to your east. "   
+
+            # Location Description                     
+            if self._map._locMap[px][py] is not 0:
+                self._description = self._description + " there is "\
+                    + self._map.DescribeLocation(px,py) + " here. "
+            else:
+                # North
+                if self._map._locMap[px][py + 1] is not 0:
+                    self._description = self._description + " there is "\
+                        + self._map.DescribeLocation(px,py + 1) + " to your north. "
+                # West
+                elif self._map._locMap[px - 1][py] is not 0:
+                    self._description = self._description + " there is "\
+                        + self._map.DescribeLocation(px - 1,py) + " to your west. "
+                # South 
+                elif self._map._locMap[px][py - 1] is not 0:
+                    self._description = self._description + " there is "\
+                        + self._map.DescribeLocation(px,py - 1) + " to your south. "
+                # East
+                if self._map._locMap[px + 1][py] is not 0:
+                    self._description = self._description + " there is "\
+                        + self._map.DescribeLocation(px + 1,py) + " to your east. "   
+
 
     # Determine if player should be engaged with an enemy
     def _CheckForEngagement(self):
@@ -283,7 +359,7 @@ class Game:
 if __name__ == "__main__":
     useKeyboard = False
     if len(argv) > 1:
-        if argv[1] == "-keyboard":
+        if argv[1] == "--keyboard" or argv[1] == "-K":
             useKeyboard = True
 
 
