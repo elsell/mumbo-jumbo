@@ -71,22 +71,26 @@ class Game:
                 self._playerMovementDirection = self._C.North
             else:
                 self._description = "you cannot go north"
+                self._playerMovementDirection = self._C.NoMovement
         elif command == "go west":
             if self._playerPosition["x"] > 0 and not self._playerEngaged:
                 self._playerMovementDirection = self._C.West
             else:                
                 self._description = "you cannot go west"
+                self._playerMovementDirection = self._C.NoMovement
         elif command == "go east":
             if self._playerPosition["x"] < self._map._size - 1 and \
              not self._playerEngaged:
                 self._playerMovementDirection = self._C.East
             else:                
                 self._description = "you cannot go east"
+                self._playerMovementDirection = self._C.NoMovement
         elif command == "go south":
             if self._playerPosition["y"] > 0 and not self._playerEngaged:
                 self._playerMovementDirection = self._C.South
             else:                
-                self._description = "you cannot go south"     
+                self._description = "you cannot go south"   
+                self._playerMovementDirection = self._C.NoMovement  
         elif command == "attack head":
             self._attack = True
             self._playerAttackTarget = self._C.Head
