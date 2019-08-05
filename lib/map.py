@@ -305,16 +305,24 @@ class Map:
 
     ## DESCRIPTION GETTERS ##
     def DescribeHeight(self, x, y):
-        return self._constants.HeightDescriptions[self._heightMap[x][y]]
+        x = int(x)
+        y = int(y)
+        return self._constants.HeightDescriptions[int(self._heightMap[x][y])]
         
     def DescribeRiver(self, x, y):
-        return self._constants.RiverDescriptions[self._riverMap[x][y]]
+        x = int(x)
+        y = int(y)        
+        return self._constants.RiverDescriptions[int(self._riverMap[x][y])]
 
     def DescribeLocation(self, x, y):
-        return self._constants.LocationDescriptions[self._locMap[x][y]]
+        x = int(x)
+        y = int(y)        
+        return self._constants.LocationDescriptions[int(self._locMap[x][y])]
 
     def DescribeTrees(self, x, y):
-        return self._constants.TreeDescriptions[self._treeMap[x][y]]
+        x = int(x)
+        y = int(y)        
+        return self._constants.TreeDescriptions[int(self._treeMap[x][y])]
 
     # Saves serialized representation of the map for visualization purposes
     def SaveToFile(self, filename = "map.data"):

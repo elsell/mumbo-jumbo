@@ -218,17 +218,17 @@ class Game:
             print("Handling Player Move...")
 
         if not self._playerEngaged:
-            px = self._playerPosition["x"]
-            py = self._playerPosition["y"]
+            px = int(self._playerPosition["x"])
+            py = int(self._playerPosition["y"])
             if self._playerMovementDirection is not self._C.NoMovement:
                 if self._playerMovementDirection is self._C.North:
-                    py = py + 1
+                    self._playerPosition["y"] = py + 1
                 elif self._playerMovementDirection is self._C.West:
-                    px = px - 1
+                    self._playerPosition["x"] = px - 1
                 elif self._playerMovementDirection is self._C.South:
-                    py = py - 1        
+                    pyself._playerPosition["y"] = py - 1        
                 elif self._playerMovementDirection is self._C.East:
-                    px = px + 1
+                    self._playerPosition["x"] = px + 1
                 self._description = "you come to "
             else:
                 self._description = "you are in "
