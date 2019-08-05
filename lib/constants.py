@@ -14,6 +14,10 @@ class Constants:
     def __init__(self):
         pass
 
+    @property
+    def KeyboardPrompt(self):
+        return "~> "
+
     # Mountain Frequency Modifier (1 = Most, 0 = Least)
     @property
     def MountainFrequency(self):

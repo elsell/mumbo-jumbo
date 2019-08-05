@@ -14,8 +14,9 @@ from constants import Constants, Clamp, VERBOSE
 from player import Player
 import enemy
 from speechEngine import SpeechEngine, Question
+from sys import argv
 
-SE = SpeechEngine()
+SE = None
 
 class Game:
     def __init__(self, mapSize):
@@ -276,6 +277,13 @@ class Game:
         
 
 if __name__ == "__main__":
+    useKeyboard = False
+    if len(argv) > 1:
+        if argv[1] == "-keyboard":
+            useKeyboard = True
+
+
+    SE = SpeechEngine(useKeyboard)
     g = Game(25)
     g.Start()
 
