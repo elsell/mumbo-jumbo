@@ -301,7 +301,36 @@ class Game:
                 # East
                 if self._map._locMap[px + 1][py] is not 0:
                     self._description = self._description + " there is "\
-                        + self._map.DescribeLocation(px + 1,py) + " to your east. "   
+                        + self._map.DescribeLocation(px + 1,py) + " to your east. " 
+
+            # See if an enemy moves to attack
+            if self._map._enemyMap[px][py] is not None:
+                self._activeEnemy = self._map._enemyMap[px][py]
+                noise = self._player._stats["noise"]
+                hear  = self._activeEnemy.hear
+                self._description = self._description + " a " + \
+                    self._activeEnemy.Name + " lurks nearby. "
+                if noise <= .5 * hear:
+                    r = 3
+                    if r == random.randrange(0, r):
+                        self._playerEngaged = True
+                        self._description = self._description + " it notices " \
+                            "you, and moves to attack."
+                elif noise > .5 and noise < hear:
+                    r = 1
+                    if r == random.randrange(0, r):
+                        self._playerEngaged = True
+                        self._description = self._description + " it notices " \
+                            "you, and moves to attack."
+                elif noise >= hear:
+                    self._playerEngaged = True
+                    self._description = self._description + " it notices " \
+                        "you, and moves to attack."
+                if not self._playerEngaged:
+                    self._description = self._description + " it does not notice" \
+                        "you. Tread lightly."
+
+
 
 
     # Determine if player should be engaged with an enemy
