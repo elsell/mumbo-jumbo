@@ -111,6 +111,8 @@ class Game:
         if self._playerTurn:
             self._playerTurn = False
             self._UpdateMap()
+            if VERBOSE:
+                self._map.SaveToFile("game_debug_map.data", self._playerPosition)
 
             if VERBOSE:
                 print("\n\n-= Accepting Command =-")
