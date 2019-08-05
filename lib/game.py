@@ -266,20 +266,20 @@ class Game:
             else:
                 # North
                 if self._map._riverMap[px][py + 1] is not 0:
-                    self._description = self._description + " a stream, flowing "\
-                        + self._map.DescribeRiver(px,py + 1) + " burbles to your north. "
+                    self._description = self._description + " you hear rushing"\
+                        "water to your north. "
                 # West
                 elif self._map._riverMap[px - 1][py] is not 0:
-                    self._description = self._description + " a stream, flowing "\
-                        + self._map.DescribeRiver(px - 1,py) + "burbles to your west. "
+                    self._description = self._description + " you hear rushing"\
+                        "water to your west. "
                 # South 
                 elif self._map._riverMap[px][py - 1] is not 0:
-                    self._description = self._description + " a stream, flowing "\
-                        + self._map.DescribeRiver(px,py - 1) + "burbles to your south. "
+                    self._description = self._description + " you hear rushing"\
+                        "water to your south. "
                 # East
                 if self._map._riverMap[px + 1][py] is not 0:
-                    self._description = self._description + " a stream, flowing "\
-                        + self._map.DescribeRiver(px + 1,py) + "burbles to your east. "   
+                    self._description = self._description + " you hear rushing"\
+                        "water to your east. " 
 
             # Location Description                     
             if self._map._locMap[px][py] is not 0:
