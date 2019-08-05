@@ -33,8 +33,8 @@ class Game:
 
         self._playerTurn = False
         self._playerPosition = {
-            "x": int(mapSize * .5),
-            "y": int(mapSize * .5)
+            "x": 0,#int(mapSize * .5),
+            "y": 0,#int(mapSize * .5)
         }
 
         self._attack = False
@@ -129,6 +129,8 @@ class Game:
                 self._CheckForEngagement()
                 self._HandlePlayerMove()   
 
+
+
             if self._attack:
 
                 if self._playerEngaged:
@@ -139,6 +141,9 @@ class Game:
             if self._playerEngaged:
                 self.HandleEnemyAttack()
 
+            if VERBOSE:
+                self._map.SaveToFile("game_debug_map.data", self._playerPosition)
+                print(self._playerPosition)
             SE.SpeakText(self._description)
             self._description = ""
 
@@ -151,7 +156,6 @@ class Game:
     def _UpdateMap(self):
         if VERBOSE:
             print("Updating Map...")
-            self._map.SaveToFile("game_debug_map.data")
             print("TSE: " + str(self._turnsSinceEngagement))
         #Create 5x5 area around player in which to spawn enemies and such
         xLow  = self._playerPosition["x"] - 2
@@ -232,74 +236,76 @@ class Game:
                 self._description = "you come to "
             else:
                 self._description = "you are in "
+            px = int(self._playerPosition["x"])
+            py = int(self._playerPosition["y"])
 
             # Height Description
             self._description = self._description + \
                 self._map.DescribeHeight(px, py) + ". "
             
             # Tree Description
-            if self._map._treeMap[px][py] is not 0:
+            if int(self._map._treeMap[px][py]) != 0:
                 self._description = self._description + "you are surrounded by "\
                     + self._map.DescribeTrees(px,py) + ". "
             else:
                 # North
-                if self._map._treeMap[px][py + 1] is not 0:
+                if int(self._map._treeMap[px][py + 1]) != 0:
                     self._description = self._description + " to your north are "\
                         + self._map.DescribeTrees(px,py + 1) + ". "
                 # West
-                elif self._map._treeMap[px - 1][py] is not 0:
+                if int(self._map._treeMap[px - 1][py]) != 0:
                     self._description = self._description + " to your west are "\
                         + self._map.DescribeTrees(px - 1,py) + ". "
                 # South 
-                elif self._map._treeMap[px][py - 1] is not 0:
+                if int(self._map._treeMap[px][py - 1]) != 0:
                     self._description = self._description + " to your south are "\
                         + self._map.DescribeTrees(px,py - 1) + ". "
                 # East
-                if self._map._treeMap[px + 1][py] is not 0:
+                if int(self._map._treeMap[px + 1][py]) != 0:
                     self._description = self._description + " to your east are "\
                         + self._map.DescribeTrees(px + 1,py) + ". "  
 
             # River Description
-            if self._map._riverMap[px][py] is not 0:
+            if int(self._map._riverMap[px][py]) != 0:
                 self._description = self._description + " a stream, flowing "\
                     + self._map.DescribeRiver(px,py) + " burbles nearby. "
             else:
                 # North
-                if self._map._riverMap[px][py + 1] is not 0:
+                if int(self._map._riverMap[px][py + 1]) != 0:
                     self._description = self._description + " you hear rushing"\
                         "water to your north. "
                 # West
-                elif self._map._riverMap[px - 1][py] is not 0:
+                if int(self._map._riverMap[px - 1][py]) != 0:
                     self._description = self._description + " you hear rushing"\
                         "water to your west. "
                 # South 
-                elif self._map._riverMap[px][py - 1] is not 0:
+                if int(self._map._riverMap[px][py - 1]) != 0:
                     self._description = self._description + " you hear rushing"\
                         "water to your south. "
                 # East
-                if self._map._riverMap[px + 1][py] is not 0:
+                if int(self._map._riverMap[px + 1][py]) != 0:
                     self._description = self._description + " you hear rushing"\
                         "water to your east.  " 
 
             # Location Description                     
-            if self._map._locMap[px][py] is not 0:
+            if int(self._map._locMap[px][py]) != 0:
                 self._description = self._description + " there is "\
                     + self._map.DescribeLocation(px,py) + " here. "
             else:
                 # North
-                if self._map._locMap[px][py + 1] is not 0:
+                if int(self._map._locMap[px][py + 1]) != 0:
                     self._description = self._description + " there is "\
                         + self._map.DescribeLocation(px,py + 1) + " to your north. "
                 # West
-                elif self._map._locMap[px - 1][py] is not 0:
+                if int(self._map._locMap[px - 1][py]) != 0:
                     self._description = self._description + " there is "\
                         + self._map.DescribeLocation(px - 1,py) + " to your west. "
                 # South 
-                elif self._map._locMap[px][py - 1] is not 0:
+                if int(self._map._locMap[px][py - 1]) != 0:
                     self._description = self._description + " there is "\
                         + self._map.DescribeLocation(px,py - 1) + " to your south. "
                 # East
-                if self._map._locMap[px + 1][py] is not 0:
+                if int(self._map._locMap[px + 1][py]) != 0:
                     self._description = self._description + " there is "\
                         + self._map.DescribeLocation(px + 1,py) + " to your east. " 
 
@@ -307,7 +313,7 @@ class Game:
             if self._map._enemyMap[px][py] is not None:
                 self._activeEnemy = self._map._enemyMap[px][py]
                 noise = self._player._stats["noise"]
-                hear  = self._activeEnemy.hear
+                hear  = self._activeEnemy.Hear
                 self._description = self._description + " a " + \
                     self._activeEnemy.Name + " lurks nearby. "
                 if noise <= .5 * hear:
@@ -328,7 +334,7 @@ class Game:
                         "you, and moves to attack."
                 if not self._playerEngaged:
                     self._description = self._description + " it does not notice" \
-                        "you. Tread lightly."
+                        " you. Tread lightly."
 
 
 

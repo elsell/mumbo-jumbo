@@ -113,11 +113,11 @@ class Map:
         yChange = y - lowestAdjacentCell[1]
 
         if xChange > 0:
-            # West to East
-            direction = 5
-        elif xChange < 0:
             # East to West
             direction = 10
+        elif xChange < 0:
+            # West to East
+            direction = 5
 
         if yChange > 0:
             # North to South
@@ -325,7 +325,7 @@ class Map:
         return self._constants.TreeDescriptions[int(self._treeMap[x][y])]
 
     # Saves serialized representation of the map for visualization purposes
-    def SaveToFile(self, filename = "map.data"):
+    def SaveToFile(self, filename = "map.data", playerPos = []):
         # Build Object to Convert to JSON
         obj = {
             "heightMap": self._heightMap,
@@ -334,6 +334,9 @@ class Map:
             "treeMap": self._treeMap,
             "enemyMap": self._enemyMap
         }
+
+        if len(playerPos) > 0:
+            obj["playerPosition"] = playerPos
         
         with open(filename, 'w') as file:
             file.write(json.dumps(obj))
