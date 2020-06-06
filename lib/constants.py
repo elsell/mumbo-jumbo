@@ -18,6 +18,19 @@ class Constants:
     def KeyboardPrompt(self):
         return "~> "
 
+    @property
+    def TimeUnitsInDay(self):
+        """
+        How many time units make up a day? If 24, then one day 
+        is equivalent to 24 time units (which is what we're 
+        used to with 24 hours in a day)
+
+        Every turn advances the time by one time unit. A default
+        of 48 is chosen here to make one day go by in 48 turns,
+        or every turn is equivalent to 1/2 'hour'.
+        """
+        return 48
+
     # Mountain Frequency Modifier (1 = Most, 0 = Least)
     @property
     def MountainFrequency(self):
@@ -29,7 +42,7 @@ class Constants:
         return 0.4
 
     # True: Rivers flow to lowest adjacent cell
-    # False: Rivers flow to highgest-lowest adjacent cell
+    # False: Rivers flow to highest-lowest adjacent cell
     @property
     def RealisticRiverFlow(self):
         return False

@@ -66,7 +66,7 @@ class Game:
             self._DoPly()
 
             # Update the time of day (1 hour / turn)
-            self._timeOfDay = self._timeOfDay + 1
+            self._timeOfDay = (self._timeOfDay + 1) % self._C.TimeUnitsInDay
 
 
     def _ParseCommand(self, command):
