@@ -194,18 +194,18 @@ class Constants:
     def RiverDescriptions(self):
         return{
             0: "no river",
+            # Pure Cardinal
             1: "from north to south",
-            2: "from north to east",
-            3: "from west to north",
-            4: "from west to south",
-            5: "from west to east",
-            6: "from south to north",
-            7: "from south to west",
-            8: "from south to east",
-            9: "from east to north",
-            10: "from east to west",
-            11: "from east to south",
-            12: "a lake"
+            2: "from west to east",
+            3: "from south to north",
+            4: "from east to west",
+            # Diagonal
+            5: "north-west",
+            6: "north-east",
+            7: "south-west",
+            8: "south-east",
+            9: "a lake",
+            10: "a river's mouth"
         }
 
     

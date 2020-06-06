@@ -56,12 +56,40 @@ class Map:
         self._GenerateTreeMap()
         self._GenerateRiverMap()
 
-    # Recursively traces a river down a slope starting at the cell
-    # tempArr[x][y]
-    def _TraceRiverPath(self, x, y, tempArr, length = 0):
-        curCellHeight = tempArr[x][y]
+    def _GetFlowDirection(self, cell1, cell2):
+        """
+        Returns a pair of cardinal directions denoting the flow
+        direction from cell1 -> cell2.
+        """
+        xChange = cell1[0] - cell2[0]
+        yChange = cell2[0] - cell2[1]
 
-        # We shall spawn a river!
+        # If the cells are the same, it's a lake and is not flowing
+        if xChange == 0 and yChange == 0:
+            return 9
+
+        if xChange > 0:
+            # East to West
+            return 4
+        elif xChange < 0:
+            # West to East
+            return 2
+        if yChange > 0:
+            # North to South
+            return 1
+        elif yChange < 0:
+            # South to North
+            return 3
+
+    def _GetLowestAdjacentCell(self, heightMap, x, y, realisticRiverFlow):
+        """
+        Returns the lowest adjacent cell to the cell
+        at position (x, y). If realisticRiverFlow is False,
+        will return the adjacent cell that has the least elevation 
+        change (but is still lower).
+        """
+        curCellHeight = heightMap[x][y]
+
         adjacentCells = [
             [x    , y + 1],
             [x    , y - 1],
@@ -77,7 +105,7 @@ class Map:
             try:
                 if cellCoords[0] < 0 or cellCoords[1] < 0:
                     continue
-                adjacentCellHeight = tempArr[cellCoords[0]][cellCoords[1]]
+                adjacentCellHeight = heightMap[cellCoords[0]][cellCoords[1]]
             except:
                 # We've gone outside of the map...just skip this cell
                 continue
@@ -86,12 +114,12 @@ class Map:
                 lowestAdjacentCell = cellCoords
 
         # Find highest of lowest adjacent cells  
-        if not self._constants.RealisticRiverFlow:
+        if not realisticRiverFlow:
             for cellCoords in adjacentCells:
                 try:
                     if cellCoords[0] < 0 or cellCoords[1] < 0:
                         continue
-                    adjacentCellHeight = tempArr[cellCoords[0]][cellCoords[1]]
+                    adjacentCellHeight = heightMap[cellCoords[0]][cellCoords[1]]
                 except:
                     # We've gone outside of the map...just skip this cell
                     continue
@@ -99,32 +127,88 @@ class Map:
                     lowestAdjacentCellHeight = adjacentCellHeight
                     lowestAdjacentCell = cellCoords
 
-        
+        return lowestAdjacentCell
+
+
+
+    # Recursively traces a river down a slope starting at the cell
+    # tempArr[x][y]
+    def _TraceRiverPath(self, x, y, tempArr, length = 0):
+        lowestAdjacentCell = self._GetLowestAdjacentCell(tempArr, x, y, self._constants.RealisticRiverFlow)
+
         # If there are no adjacent cells that are lower, we give up!
         # No sense in building a river where this is no downward slope...it'd be a lake!
         if lowestAdjacentCell is None:
-            self._riverMap[x][y] = 12 # A puddle
+            self._riverMap[x][y] = 9 # A lake
             return None
 
         # Now we need to figure out the direction of flow...yippee
+        # We look ahead by one cell so that we can understand 
+        # "curves" in the flow
+        cellFlowingToNext = self._GetLowestAdjacentCell(
+            tempArr,
+            lowestAdjacentCell[0], lowestAdjacentCell[1],
+            self._constants.RealisticRiverFlow
+        )
+
+        # If there's no more place to flow, flow to the current cell
+        if cellFlowingToNext is None:
+            cellFlowingToNext = (x, y)
+
+        firstFlowDirection = self._GetFlowDirection((x,y), lowestAdjacentCell)
+        nextFlowDirection = self._GetFlowDirection(lowestAdjacentCell, cellFlowingToNext)
+
         direction = None
 
-        xChange = x - lowestAdjacentCell[0]
-        yChange = y - lowestAdjacentCell[1]
+        # Flowing in a straight line
+        if firstFlowDirection == nextFlowDirection:
+            direction = firstFlowDirection
+        
+        # Flowing north -> South
+        elif firstFlowDirection == 1:
+            # West -> East
+            if nextFlowDirection == 2: 
+                # South-East
+                direction = 8
+            # East -> West
+            elif nextFlowDirection == 4:
+                # South-West
+                direction = 7
 
-        if xChange > 0:
-            # East to West
-            direction = 10
-        elif xChange < 0:
-            # West to East
-            direction = 5
+        # Flowing South -> North
+        elif firstFlowDirection == 3:
+            # West -> East
+            if nextFlowDirection == 2:
+                # North-East
+                direction = 6
+            # East -> West
+            if nextFlowDirection == 4:
+                # North-West
+                direction = 5
 
-        if yChange > 0:
-            # North to South
-            direction = 1
-        elif yChange < 0:
-            # South to North
-            direction = 6
+        # Flowing West -> East
+        elif firstFlowDirection == 2:
+            # South -> North
+            if nextFlowDirection == 3:
+                # North-East
+                direction = 6
+            # North -> South
+            elif nextFlowDirection == 1:
+                # South-East
+                direction = 8
+
+        # Flowing East -> West
+        elif firstFlowDirection == 4:
+            # South -> North
+            if nextFlowDirection == 3:
+                # North-West
+                direction = 5
+            # North -> South
+            if nextFlowDirection == 1:
+                # South-West
+                direction = 7
+
+
      
         # Update the river map
         self._riverMap[x][y] = direction
@@ -151,6 +235,8 @@ class Map:
                 if curCellHeight > self._constants.MinRiverSpawnHeight:
                     if random.random() < self._constants.RiverSpawnChance:
                         self._TraceRiverPath(x, y, tempArr)
+                        # Make te river mouth a river mouth
+                        self._riverMap[x][y] = 10
             if(VERBOSE):
                 completedCells = completedCells + self._size
                 print("Progress: " + str(int(completedCells / totalCells * 100)) + "%", end="\r")
