@@ -32,7 +32,6 @@ FOLIAGE_COLORS =
     "#008000", 
     "#fffacd", 
     "#f0e68c", 
-
 ];
 
 let VIEWS = {
@@ -46,7 +45,7 @@ function setup() {
     height = 3500;
     width = height * 1.77;
     frameRate(20);
-    p5.disableFriendlyErrors = true; // disables Friendly errors
+    p5.disableFriendlyErrors = true; // disables Friendly errors, apprently more performant
 
     CreateViewSwitcher();
     c = createCanvas(width,height, WEBGL);

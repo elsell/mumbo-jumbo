@@ -49,6 +49,13 @@ class Game:
         self._playerMovementDirection = self._C.NoMovement
 
     def Start(self):
+        """
+        This is the main game loop. It simply loops while performing a ply
+        and updating the time. It also supports being put into a pause state,
+        as well as handles graceful quitting. (Right now no cleanup is performed,
+        but if one was to implement some sort of cleanup, this would be a nice place
+        from which to call the cleanup method.)
+        """
         while not self._isQuit:
             # Handle Game Pause
             while self._isPaused:
@@ -63,6 +70,13 @@ class Game:
 
 
     def _ParseCommand(self, command):
+        """
+        Given a command (a response from SpeechEngine.AskQuestion),  the corresponding
+        action is taken. I suppose this is where the "rubber meets the road".
+        Every command that a player could say must be implemented here. If it ain't here,
+        it ain't gonna work.
+        """
+
         if VERBOSE:
             print("Parsing Command: " + command)
         if command == "go north":
