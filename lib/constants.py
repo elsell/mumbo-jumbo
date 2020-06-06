@@ -204,6 +204,12 @@ class Constants:
             6: "north-east",
             7: "south-west",
             8: "south-east",
+
+            15: "west-north",
+            16: "east-north",
+            17: "west-south",
+            18: "east-south",
+            
             9: "a lake",
             10: "a river's mouth"
         }

@@ -39,23 +39,24 @@ let VIEWS = {
     "side": "side",
     "top": "top"
 };
-let VIEW = VIEWS.corner;
+let VIEW = 22;//VIEWS.corner;
 var c;
 function setup() {
     height = 3500;
     width = height * 1.77;
     frameRate(20);
-    p5.disableFriendlyErrors = true; // disables Friendly errors, apprently more performant
+    p5.disableFriendlyErrors = true; // disables Friendly errors, apparently more performant
 
     CreateViewSwitcher();
     c = createCanvas(width,height, WEBGL);
+    debugMode(5000, 100, 0, 0, 0, 2000, 0, -1000, 0);
 }
 
   
 var HAS_SAVE = false;
 function draw() {
     orbitControl();
-    background("#070d17");
+    background("#e0e0e0");
     push();            
 
 
@@ -101,33 +102,54 @@ function draw() {
             stroke("#0e0e0e");
             strokeWeight(1);
             var boxHeight = curCellHeight * HEIGHT_SCALAR;
-            translate(y * CELL_SIZE,boxHeight * -.5,x * CELL_SIZE);
+            translate(y * CELL_SIZE, boxHeight * -.5,x * CELL_SIZE);
             box(CELL_SIZE, boxHeight, CELL_SIZE);
 
             // Draw Rivers
+            push();
             riverDirection = mapRivers[x][y];
             if(riverDirection > 0)
             {
                 fill("#FF0000");
                 switch(riverDirection)
                 {
-                    case 5:
-                    case 10:
+                    case 2:
+                    case 4:
+                        // East/West
                         rotateY(PI/2);
                         break;
                     case 1:
-                    case 6:
+                    case 3:
                         // The box is already oriented North-South
                         break;
-                    case 12:
+                    case 6:
+                    case 16:
+                    case 7:
+                    case 17:
+                        // NE/EN/SW/WS
+                        rotateY(-PI/4)
+                        break;
+                    case 5:
+                    case 8:
+                    case 15:
+                    case 18:
+                        // NW/WN/SE/ES
+                        rotateY(PI/4)
+                        break;
+                    case 9:
                         // A puddle :P
                         scale(.5,1,2.5);
                         fill("#FF0000")
                         break;
+                    case 10:
+                        // A river mouth ;D
+                        scale(.5,1,2.5);
+                        fill("#FF44AA");
+                        break;
                 }
                 box(CELL_SIZE + 1, boxHeight + 1 , CELL_SIZE * .2 + 1);
             }
-
+            pop();
             // Draw Trees
             push();
             var numTrees = int(mapTrees[x][y]);

@@ -133,80 +133,164 @@ class Map:
 
     # Recursively traces a river down a slope starting at the cell
     # tempArr[x][y]
-    def _TraceRiverPath(self, x, y, tempArr, length = 0):
+    def _TraceRiverPath(self, x, y, tempArr, previousCell, length = 0):
         lowestAdjacentCell = self._GetLowestAdjacentCell(tempArr, x, y, self._constants.RealisticRiverFlow)
 
         # If there are no adjacent cells that are lower, we give up!
         # No sense in building a river where this is no downward slope...it'd be a lake!
         if lowestAdjacentCell is None:
             self._riverMap[x][y] = 9 # A lake
-            return None
+            return length
 
-        # Now we need to figure out the direction of flow...yippee
-        # We look ahead by one cell so that we can understand 
-        # "curves" in the flow
-        cellFlowingToNext = self._GetLowestAdjacentCell(
-            tempArr,
-            lowestAdjacentCell[0], lowestAdjacentCell[1],
-            self._constants.RealisticRiverFlow
-        )
+        # Now we need to figure out the direction of flow...yippee    
 
-        # If there's no more place to flow, flow to the current cell
-        if cellFlowingToNext is None:
-            cellFlowingToNext = (x, y)
+        # Start with the flow direction without knowing where we came from
+        flowDirectionNoHistory = self._GetFlowDirection((x,y), lowestAdjacentCell)
 
-        firstFlowDirection = self._GetFlowDirection((x,y), lowestAdjacentCell)
-        nextFlowDirection = self._GetFlowDirection(lowestAdjacentCell, cellFlowingToNext)
+        # Find out the previous flow direction
+        previousFlowDirection = self._riverMap[previousCell[0]][previousCell[1]]
+        if previousFlowDirection is None:
+            previousFlowDirection = flowDirectionNoHistory
 
-        direction = None
+
+        direction = flowDirectionNoHistory
 
         # Flowing in a straight line
-        if firstFlowDirection == nextFlowDirection:
-            direction = firstFlowDirection
+        if previousFlowDirection == flowDirectionNoHistory:
+            pass
         
         # Flowing north -> South
-        elif firstFlowDirection == 1:
+        elif previousFlowDirection == 1:
             # West -> East
-            if nextFlowDirection == 2: 
+            if flowDirectionNoHistory == 2: 
                 # South-East
                 direction = 8
             # East -> West
-            elif nextFlowDirection == 4:
+            elif flowDirectionNoHistory == 4:
                 # South-West
                 direction = 7
 
         # Flowing South -> North
-        elif firstFlowDirection == 3:
+        elif previousFlowDirection == 3:
             # West -> East
-            if nextFlowDirection == 2:
-                # North-East
-                direction = 6
+            if flowDirectionNoHistory == 2:
+                # East-North
+                direction = 16
             # East -> West
-            if nextFlowDirection == 4:
-                # North-West
-                direction = 5
+            elif flowDirectionNoHistory == 4:
+                # West-North
+                direction = 15
 
         # Flowing West -> East
-        elif firstFlowDirection == 2:
+        elif previousFlowDirection == 2:
             # South -> North
-            if nextFlowDirection == 3:
+            if flowDirectionNoHistory == 3:
                 # North-East
                 direction = 6
             # North -> South
-            elif nextFlowDirection == 1:
+            elif flowDirectionNoHistory == 1:
+                # East-South
+                direction = 18
+
+        # Flowing East -> West
+        elif previousFlowDirection == 4:
+            # South -> North
+            if flowDirectionNoHistory == 3:
+                # North-West
+                direction = 5
+            # North -> South
+            elif flowDirectionNoHistory == 1:
+                # West-South
+                direction = 17
+
+        # Flowing North-West
+        elif previousFlowDirection == 5:
+            # West -> East
+            if flowDirectionNoHistory == 2:
+                # East-North
+                direction = 16
+            # East -> West
+            elif flowDirectionNoHistory ==  4:
+                # West-North
+                direction = 15
+
+        # Flowing North-East
+        elif previousFlowDirection == 6:
+            # West -> East
+            if flowDirectionNoHistory == 2:
+                # West-North
+                direction = 15
+            # East -> West
+            elif flowDirectionNoHistory ==  4:
+                # East-North
+                direction = 16
+            
+        # Flowing South-West
+        elif previousFlowDirection == 7:
+            # North -> South
+            if flowDirectionNoHistory == 1:
+                # West-South
+                direction = 17
+            # South -> North
+            elif flowDirectionNoHistory == 3:
+                # North-West
+                direction = 5
+
+        # Flowing South-East
+        elif previousFlowDirection == 8:
+            # North -> South
+            if flowDirectionNoHistory == 1:
+                # East-South
+                direction = 18
+            # South -> North
+            elif flowDirectionNoHistory == 3:
+                # North-East
+                direction = 6
+
+        # Flowing West-North
+        elif previousFlowDirection == 15:
+            # North -> South
+            if flowDirectionNoHistory == 1:
+                # West-South
+                direction = 17
+            # South -> North
+            elif flowDirectionNoHistory == 3:
+                # North-West
+                direction = 5
+
+        # Flowing East-North
+        elif previousFlowDirection == 16:
+            # North -> South
+            if flowDirectionNoHistory == 1:
+                # East-South
+                direction = 18
+            # South -> North
+            elif flowDirectionNoHistory == 3:
+                # North-East
+                direction = 6
+                
+        # Flowing West-South
+        elif previousFlowDirection == 17:
+            # West -> East
+            if flowDirectionNoHistory == 2:
+                # South-West
+                direction = 7
+            # East -> West
+            elif flowDirectionNoHistory == 4:
                 # South-East
                 direction = 8
 
-        # Flowing East -> West
-        elif firstFlowDirection == 4:
-            # South -> North
-            if nextFlowDirection == 3:
-                # North-West
-                direction = 5
-            # North -> South
-            if nextFlowDirection == 1:
+        # Flowing East-South
+        elif previousFlowDirection == 18:
+            # West -> East
+            if flowDirectionNoHistory == 2:
+                # South-East
+                direction = 8
+            # East -> West
+            elif flowDirectionNoHistory == 4:
                 # South-West
                 direction = 7
+
 
 
      
@@ -214,7 +298,7 @@ class Map:
         self._riverMap[x][y] = direction
 
         # Now trace the lowestCell down
-        return self._TraceRiverPath(lowestAdjacentCell[0], lowestAdjacentCell[1], tempArr, length + 1)
+        return self._TraceRiverPath(lowestAdjacentCell[0], lowestAdjacentCell[1], tempArr, (x,y), length + 1)
                 
 
     def _GenerateRiverMap(self):
@@ -234,9 +318,11 @@ class Map:
 
                 if curCellHeight > self._constants.MinRiverSpawnHeight:
                     if random.random() < self._constants.RiverSpawnChance:
-                        self._TraceRiverPath(x, y, tempArr)
-                        # Make te river mouth a river mouth
-                        self._riverMap[x][y] = 10
+                        length = self._TraceRiverPath(x, y, tempArr, (x,y))
+                        if length > 0:
+                            # Make the river mouth a river mouth
+                            self._riverMap[x][y] = 10
+                        
             if(VERBOSE):
                 completedCells = completedCells + self._size
                 print("Progress: " + str(int(completedCells / totalCells * 100)) + "%", end="\r")
