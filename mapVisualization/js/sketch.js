@@ -4,6 +4,7 @@ mapTrees = []
 mapRivers = []
 mapEnemies = []
 mapSize = 0;
+DRAW_HEIGHTS = true
 CELL_SIZE = 20;
 HEIGHT_SCALAR = 5;
 COLORS = 
@@ -183,7 +184,8 @@ function draw() {
     
                 colorStr = FOLIAGE_COLORS[int(numTrees)];
                 fill(colorStr);
-                box(CELL_SIZE * .25,  treeHeight,CELL_SIZE * .25);
+                if(DRAW_HEIGHTS)
+                    box(CELL_SIZE * .25,  treeHeight,CELL_SIZE * .25);
             }
             pop();
 
