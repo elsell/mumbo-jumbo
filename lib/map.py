@@ -127,6 +127,12 @@ class Map:
                     lowestAdjacentCellHeight = adjacentCellHeight
                     lowestAdjacentCell = cellCoords
 
+
+        # Check to see if we're merging with another river
+        if lowestAdjacentCell != None:
+            if self._riverMap[lowestAdjacentCell[0]][lowestAdjacentCell[1]] != 0:
+                return [x,y] 
+
         return lowestAdjacentCell
 
 
@@ -138,7 +144,7 @@ class Map:
 
         # If there are no adjacent cells that are lower, we give up!
         # No sense in building a river where this is no downward slope...it'd be a lake!
-        if lowestAdjacentCell is None:
+        if lowestAdjacentCell == None:
             self._riverMap[x][y] = 9 # A lake
             return length
 
@@ -296,6 +302,11 @@ class Map:
      
         # Update the river map
         self._riverMap[x][y] = direction
+
+        # If the lowestAdjacentCell is the current cell, it butts up
+        # against another river. Stop tracing
+        if lowestAdjacentCell == [x,y]:
+            return length
 
         # Now trace the lowestCell down
         return self._TraceRiverPath(lowestAdjacentCell[0], lowestAdjacentCell[1], tempArr, (x,y), length + 1)
