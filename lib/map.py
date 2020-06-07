@@ -83,7 +83,7 @@ class Map:
 
     def _GetLowestAdjacentCell(self, heightMap, x, y, realisticRiverFlow):
         """
-        Returns the lowest adjacent cell to the cell
+        Returns (lowestAdjacentCell, isSwamp) to the cell
         at position (x, y). If realisticRiverFlow is False,
         will return the adjacent cell that has the least elevation 
         change (but is still lower).
@@ -131,16 +131,17 @@ class Map:
         # Check to see if we're merging with another river
         if lowestAdjacentCell != None:
             if self._riverMap[lowestAdjacentCell[0]][lowestAdjacentCell[1]] != 0:
-                return [x,y] 
+                return (lowestAdjacentCell, True)
 
-        return lowestAdjacentCell
+        return (lowestAdjacentCell, False)
 
 
 
     # Recursively traces a river down a slope starting at the cell
     # tempArr[x][y]
     def _TraceRiverPath(self, x, y, tempArr, previousCell, length = 0):
-        lowestAdjacentCell = self._GetLowestAdjacentCell(tempArr, x, y, self._constants.RealisticRiverFlow)
+        lowestAdjacentCell, isSwamp = self._GetLowestAdjacentCell(tempArr, x, y, self._constants.RealisticRiverFlow)
+
 
         # If there are no adjacent cells that are lower, we give up!
         # No sense in building a river where this is no downward slope...it'd be a lake!
@@ -304,8 +305,9 @@ class Map:
         self._riverMap[x][y] = direction
 
         # If the lowestAdjacentCell is the current cell, it butts up
-        # against another river. Stop tracing
-        if lowestAdjacentCell == [x,y]:
+        # against another river. Stop tracing, and make this a swamp
+        if isSwamp:
+            self._riverMap[x][y] = 11
             return length
 
         # Now trace the lowestCell down

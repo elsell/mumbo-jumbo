@@ -162,6 +162,12 @@ function draw() {
                         scale(.5,1,2.5);
                         fill("#FF44AA");
                         break;
+                    case 11:
+                        // A swamp!
+                        scale(.5,1,2.5);
+                        fill("#5a6b16");
+                        break;                        
+
                 }
                 box(CELL_SIZE + 1, boxHeight + 1 , CELL_SIZE * .2 + 1);
             }
