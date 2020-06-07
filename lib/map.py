@@ -323,7 +323,7 @@ class Map:
         # against another river. Stop tracing, and make this a swamp
         if isSwamp:
             # If the length of the river is less than 3, roll back our changes
-            if length < 3:
+            if length < 4:
                 for cell in path:
                     self._riverMap[cell[0]][cell[1]] = 0
                     return 0
@@ -356,9 +356,8 @@ class Map:
 
                 if curCellHeight > self._constants.MinRiverSpawnHeight:
                     if random.random() < self._constants.RiverSpawnChance:
-                        # Make the river mouth a river mouth
                         length = self._TraceRiverPath(x, y, tempArr, (x,y))
-                        # Remove the river head if the length is 0
+                        # Add the river head if the length is > 0
                         if length > 0:
                             self._riverMap[x][y] = 10
                         
@@ -560,10 +559,17 @@ if __name__ == "__main__":
     mapSize = 30
     mapSeed = int(time.time() * 10000000 * random.random())
 
-    if len(argv) > 1:
+    if len(argv) < 2:
+        print("Usage: {} <map_size> [map_seed]".format(argv[0]))
+        raise SystemExit
+
+    try:
         mapSize = int(argv[1])
         if len(argv) > 2:
             mapSeed = int(argv[2])
+    except:
+        print("Usage: {} <map_size> [map_seed]".format(argv[0]))
+        raise SystemExit
 
     print("Generating map...")
     print("Size: " + str(mapSize) + "x" + str(mapSize))
@@ -571,6 +577,7 @@ if __name__ == "__main__":
 
     m =  Map(mapSize, mapSeed)
     m.SaveToFile()
+    print("Map generation complete.")
     """
 
     # Print Height Descriptions
