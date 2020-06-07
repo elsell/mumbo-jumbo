@@ -211,7 +211,7 @@ class Constants:
             18: "east-south",
 
             9: "a lake",
-            10: "a river's mouth",
+            10: "a river's head",
             11: "a swamp",
         }
 

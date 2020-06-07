@@ -22,7 +22,7 @@ class Map:
                 "Map size must be greater than 0 (Provided " + str(size) + ")"
             )
 
-        if seed is not None:
+        if seed != None:
             random.seed(seed)
 
         # Get us some constants!
@@ -291,6 +291,7 @@ class Map:
         (length, True), else if the path is less than 3 long and intersects with
         another river, returns (length, False)
         """
+
         lowestAdjacentCell, isSwamp = self._GetLowestAdjacentCell(tempArr, x, y, self._constants.RealisticRiverFlow)
 
 
@@ -308,6 +309,11 @@ class Map:
 
         # Find out the previous flow direction
         previousFlowDirection = self._riverMap[previousCell[0]][previousCell[1]]
+
+        # If the previous cell is a head, we have to get the flow direction again
+        if previousFlowDirection == 10:
+            previousFlowDirection = self._GetFlowDirection(previousCell,(x,y))
+
         if previousFlowDirection is None:
             previousFlowDirection = flowDirectionNoHistory
 
@@ -335,6 +341,12 @@ class Map:
 
             return length
 
+        # Add the river head
+        if length == 0:
+            self._riverMap[x][y] = 10
+            path.append([x,y])
+
+
         # Now trace the lowestCell down
         return self._TraceRiverPath(lowestAdjacentCell[0], lowestAdjacentCell[1], tempArr, (x,y), path, length + 1)
                 
@@ -357,9 +369,7 @@ class Map:
                 if curCellHeight > self._constants.MinRiverSpawnHeight:
                     if random.random() < self._constants.RiverSpawnChance:
                         length = self._TraceRiverPath(x, y, tempArr, (x,y))
-                        # Add the river head if the length is > 0
-                        if length > 0:
-                            self._riverMap[x][y] = 10
+
                         
             if(VERBOSE):
                 completedCells = completedCells + self._size
