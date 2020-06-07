@@ -415,6 +415,6 @@ if __name__ == "__main__":
 
 
     SE = SpeechEngine(useKeyboard)
-    g = Game(25)
+    g = Game(50)
     g.Start()
 

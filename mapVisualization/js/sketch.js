@@ -128,13 +128,13 @@ function draw() {
                     case 7:
                         // NE/EN/SW/WS
                         fill("#00ff00")
-                        translate(10, 0,-25);
+                        translate(.10 * CELL_SIZE, 0,-.25 * CELL_SIZE);
                         rotateY(-PI/4);
                         break;
                     case 16:
                     case 17:
                         // NE/EN/SW/WS
-                        translate(-10, 0,25);
+                        translate(-.10 * CELL_SIZE, 0,.25 * CELL_SIZE);
                         fill("#aaff00")
                         rotateY(-PI/4);
                         
@@ -144,11 +144,11 @@ function draw() {
                         // NW/WN/SE/ES
                         fill("#0000ff")
                         rotateY(PI/4);
-                        translate(10, 0,25);
+                        translate(.10 * CELL_SIZE, 0,.25 * CELL_SIZE);
                         break;
                     case 15:
                     case 18:
-                        translate(-10, 0,-25);
+                        translate(-.10 * CELL_SIZE, 0,-.25 * CELL_SIZE);
                         fill("#00aaff")
                         rotateY(PI/4);
                         break;
