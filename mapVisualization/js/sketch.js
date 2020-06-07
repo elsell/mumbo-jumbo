@@ -58,8 +58,10 @@ function draw() {
     orbitControl();
     background("#e0e0e0");
     push();            
-
-
+    
+    rotateY(PI/2);
+    translate((-mapSize * .50) * CELL_SIZE,0,(-mapSize * .50) * CELL_SIZE)
+    push();
     switch(VIEW)
     {
         case VIEWS.corner:
@@ -123,18 +125,32 @@ function draw() {
                         // The box is already oriented North-South
                         break;
                     case 6:
-                    case 16:
                     case 7:
+                        // NE/EN/SW/WS
+                        fill("#00ff00")
+                        translate(10, 0,-25);
+                        rotateY(-PI/4);
+                        break;
+                    case 16:
                     case 17:
                         // NE/EN/SW/WS
-                        rotateY(-PI/4)
+                        translate(-10, 0,25);
+                        fill("#aaff00")
+                        rotateY(-PI/4);
+                        
                         break;
                     case 5:
                     case 8:
+                        // NW/WN/SE/ES
+                        fill("#0000ff")
+                        rotateY(PI/4);
+                        translate(10, 0,25);
+                        break;
                     case 15:
                     case 18:
-                        // NW/WN/SE/ES
-                        rotateY(PI/4)
+                        translate(-10, 0,-25);
+                        fill("#00aaff")
+                        rotateY(PI/4);
                         break;
                     case 9:
                         // A puddle :P
@@ -202,6 +218,7 @@ function draw() {
         }
         pop();
     }
+    pop();
     CreateKey();
     pop();
 }

@@ -62,7 +62,7 @@ class Map:
         direction from cell1 -> cell2.
         """
         xChange = cell1[0] - cell2[0]
-        yChange = cell2[0] - cell2[1]
+        yChange = cell1[1] - cell2[1]
 
         # If the cells are the same, it's a lake and is not flowing
         if xChange == 0 and yChange == 0:
