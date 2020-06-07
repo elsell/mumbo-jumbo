@@ -262,8 +262,8 @@ class Map:
         elif previousFlowDirection == 17:
             # West -> East
             if flowDirectionNoHistory == 2:
-                # South-West
-                direction = 7
+                # South-East
+                direction = 8
             # East -> West
             elif flowDirectionNoHistory == 4:
                 # South-West
@@ -325,7 +325,6 @@ class Map:
             # If the length of the river is less than 3, roll back our changes
             if length < 3:
                 for cell in path:
-                    print(path)
                     self._riverMap[cell[0]][cell[1]] = 0
                     return 0
             # If we're at rocky highlands or above, it's a lake, otherwise a swamp
@@ -357,9 +356,10 @@ class Map:
 
                 if curCellHeight > self._constants.MinRiverSpawnHeight:
                     if random.random() < self._constants.RiverSpawnChance:
+                        # Make the river mouth a river mouth
                         length = self._TraceRiverPath(x, y, tempArr, (x,y))
+                        # Remove the river head if the length is 0
                         if length > 0:
-                            # Make the river mouth a river mouth
                             self._riverMap[x][y] = 10
                         
             if(VERBOSE):
