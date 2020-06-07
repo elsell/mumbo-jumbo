@@ -409,12 +409,21 @@ class Game:
 
 if __name__ == "__main__":
     useKeyboard = False
-    if len(argv) > 1:
-        if argv[1] == "--keyboard" or argv[1] == "-K":
+    if len(argv) > 2:
+        if argv[2] == "--keyboard" or argv[2] == "-K":
             useKeyboard = True
+    if len(argv) < 2:
+        print("Usage: {} <map_size> [-K | --keyboard]".format(argv[0]))
+        raise SystemExit
+
+    try:
+        mapSize = int(argv[1])
+    except:
+        print("Usage: {} <map_size> [-K | --keyboard]".format(argv[0]))
+        raise SystemExit  
 
 
     SE = SpeechEngine(useKeyboard)
-    g = Game(50)
+    g = Game(mapSize)
     g.Start()
 
