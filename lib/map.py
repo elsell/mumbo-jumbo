@@ -282,7 +282,6 @@ class Map:
 
         return direction
 
-
     # Recursively traces a river down a slope starting at the cell
     # tempArr[x][y]
     def _TraceRiverPath(self, x, y, tempArr, previousCell, path=[], length = 0):
@@ -292,15 +291,24 @@ class Map:
         another river, returns (length, False)
         """
 
+        # Python is dumb (or I'm dumber than Python is <-- more likely)
+        if length == 0:
+            path = []
+
         lowestAdjacentCell, isSwamp = self._GetLowestAdjacentCell(tempArr, x, y, self._constants.RealisticRiverFlow)
 
 
         # If there are no adjacent cells that are lower, we give up!
         # No sense in building a river where this is no downward slope...it'd be a lake!
         if lowestAdjacentCell == None:
-            self._riverMap[x][y] = 9 # A lake
-            path.append([x,y])
-            return length
+            if length == 0:
+                # Don't draw rivers that cannot flow (could be changed to allow springs)
+                self._riverMap[x][y] = 0 
+                return length
+            else:
+                self._riverMap[x][y] = 9 # A lake
+                path.append([x,y])
+                return length
 
         # Now we need to figure out the direction of flow...yippee    
 
@@ -318,33 +326,34 @@ class Map:
             previousFlowDirection = flowDirectionNoHistory
 
         # Get a history-aware flow direction for the current cell
-        direction = self._MakeHistoryAwareDirection(flowDirectionNoHistory, previousFlowDirection)
+        direction = self._MakeHistoryAwareDirection(flowDirectionNoHistory, previousFlowDirection) 
         
-     
-        # Update the river map
-        self._riverMap[x][y] = direction
-        path.append([x,y])
 
         # If the lowestAdjacentCell is the current cell, it butts up
         # against another river. Stop tracing, and make this a swamp
         if isSwamp:
             # If the length of the river is less than 3, roll back our changes
-            if length < 4:
-                for cell in path[:-1]:
+            if length < 3:
+                for cell in path:
                     self._riverMap[cell[0]][cell[1]] = 0
-                    return 0
+                return 0
             # If we're at rocky highlands or above, it's a lake, otherwise a swamp
             if self._heightMap[lowestAdjacentCell[0]][lowestAdjacentCell[1]] >= 6:
-                self._riverMap[lowestAdjacentCell[0]][lowestAdjacentCell[1]] = 9
+                self._riverMap[lowestAdjacentCell[0]][lowestAdjacentCell[1]] = 9 
             else:
-                self._riverMap[lowestAdjacentCell[0]][lowestAdjacentCell[1]] = 11
+                self._riverMap[lowestAdjacentCell[0]][lowestAdjacentCell[1]] = 11 
 
             return length
 
+        # Update the river map
+        self._riverMap[x][y] = direction 
+        path.append([x,y])
+
         # Add the river head
         if length == 0:
-            self._riverMap[x][y] = 10
+            self._riverMap[x][y] = 10 
             path.append([x,y])
+
 
 
         # Now trace the lowestCell down
