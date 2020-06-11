@@ -24,6 +24,8 @@ class Map:
 
         if seed != None:
             random.seed(seed)
+        self._seed = seed
+
 
         # Get us some constants!
         self._constants = Constants()
@@ -352,7 +354,6 @@ class Map:
         # Add the river head
         if length == 0:
             self._riverMap[x][y] = 10 
-            path.append([x,y])
 
 
 
@@ -557,6 +558,7 @@ class Map:
     def SaveToFile(self, filename = "map.data", playerPos = []):
         # Build Object to Convert to JSON
         obj = {
+            "mapSeed": self._seed,
             "heightMap": self._heightMap,
             "riverMap": self._riverMap,
             "locationMap": self._locMap,
