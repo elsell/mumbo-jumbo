@@ -337,9 +337,10 @@ class Map:
             # If the length of the river is less than 3, roll back our changes
             if length < 3:
                 for cell in path:
-                    self._riverMap[cell[0]][cell[1]] = 0
+                     self._riverMap[cell[0]][cell[1]] = 0
                 return 0
             # If we're at rocky highlands or above, it's a lake, otherwise a swamp
+            self._riverMap[x][y] = direction 
             if self._heightMap[lowestAdjacentCell[0]][lowestAdjacentCell[1]] >= 6:
                 self._riverMap[lowestAdjacentCell[0]][lowestAdjacentCell[1]] = 9 
             else:
