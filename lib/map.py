@@ -330,7 +330,7 @@ class Map:
         if isSwamp:
             # If the length of the river is less than 3, roll back our changes
             if length < 4:
-                for cell in path:
+                for cell in path[:-1]:
                     self._riverMap[cell[0]][cell[1]] = 0
                     return 0
             # If we're at rocky highlands or above, it's a lake, otherwise a swamp
