@@ -39,8 +39,9 @@ FOLIAGE_COLORS =
 ];
 FEATURE_COLORS = 
 [
-    "#ccf8ff", // Waterfall
+    "#9999ff", // WaterfallBegin
     "#ff00aa", // Delta
+    "#ffaa00", // WaterfallEnd
 
 ]
 
@@ -235,7 +236,6 @@ function setupScene() {
 
             // Draw Rivers
             riverDirection = mapRivers[x][y];
-            
             if(riverDirection > 0)
             {
                 geometry = new THREE.BoxBufferGeometry(CELL_SIZE * .2,CELL_SIZE*.01,CELL_SIZE)
@@ -319,20 +319,137 @@ function setupScene() {
             var feature = parseInt(waterFeatures[x][y]);
             if(feature > 0)
             {
-                geometry = new THREE.BoxBufferGeometry(CELL_SIZE * .5,CELL_SIZE * .5,CELL_SIZE * .5)
-                material = new THREE.MeshPhongMaterial()
-                mesh = new THREE.Mesh(geometry, material)
-                mesh.position.x = x * CELL_SIZE 
-                mesh.position.y = boxHeight
-                mesh.position.z = -y * CELL_SIZE
+                color = FEATURE_COLORS[feature-1]
+                
+                if(feature == 2) // Delta
+                {
+                    geometry = new THREE.BoxBufferGeometry(CELL_SIZE * .5,CELL_SIZE * .5,CELL_SIZE * .5)
+                    material = new THREE.MeshPhongMaterial()
+                    mesh = new THREE.Mesh(geometry, material)
+                    mesh.position.x = x * CELL_SIZE 
+                    mesh.position.y = boxHeight
+                    mesh.position.z = -y * CELL_SIZE
+    
+                    mesh.rotation.y = Math.PI / 4
+                    mesh.rotation.z = Math.PI / 4
+                 
+                    material.color = new THREE.Color(color)
+                    scene.add(mesh)
+                    WATER_FEATURES.push(mesh)
+                }
+                else if(feature == 1 || feature == 3) // Waterfall Begin & End
+                {
+                    if(feature == 1) // Waterfall Begin
+                    {
+                        geometry = new THREE.BoxBufferGeometry(CELL_SIZE * .2,CELL_SIZE*.2,CELL_SIZE * .35)
+                        material = new THREE.MeshPhongMaterial()
+                        mesh = new THREE.Mesh(geometry, material)
+                        mesh.position.x = x * CELL_SIZE 
+                        mesh.position.y = boxHeight - .0005
+                        mesh.position.z = -y * CELL_SIZE
+                        hasNoDirection = false
+                        // Calculate Rotation
+                        switch(riverDirection)
+                        {
+                            // Right Side
+                            case 2:
+                            case 16:
+                            case 8:
+                                mesh.rotation.y = Math.PI / 2
+                                mesh.position.x += CELL_SIZE * .35
+                                break
+                            // Left Side
+                            case 4:
+                            case 7:
+                            case 15:
+                                mesh.rotation.y = Math.PI / -2
+                                mesh.position.x -= CELL_SIZE * .35
+                                break         
+                            // Top Side
+                            case 3:
+                            case 6:
+                            case 5:
+                                mesh.position.z -= CELL_SIZE *.35
+                                break;
+                            // Bottom Side
+                            case 1:
+                            case 17:
+                            case 18:
+                                mesh.position.z += CELL_SIZE *.35  
+                                break
+                                
+                            // Allow ignoring heads/lakes/swamps
+                            default:
+                                hasNoDirection = true
+    
+                        }
+                        
+                        if(!hasNoDirection)
+                        {
+                            material.color = new THREE.Color(color)
+                            scene.add(mesh)
+                            WATER_FEATURES.push(mesh)
+                        }                     
 
-                mesh.rotation.y = Math.PI / 4
-                mesh.rotation.z = Math.PI / 4
-             
-                color = FEATURE_COLORS[feature + 1]
-                material.color = new THREE.Color(color)
-                scene.add(mesh)
-                WATER_FEATURES.push(mesh)
+                    }
+                    if(feature == 3) // Waterfall End
+                    {
+                        geometry = new THREE.BoxBufferGeometry(CELL_SIZE * .2,CELL_SIZE*.2,CELL_SIZE * .35)
+                        material = new THREE.MeshPhongMaterial()
+                        mesh = new THREE.Mesh(geometry, material)
+                        mesh.position.x = x * CELL_SIZE 
+                        mesh.position.y = boxHeight - .0005
+                        mesh.position.z = -y * CELL_SIZE
+                        hasNoDirection = false
+                        // Calculate Rotation
+                        switch(riverDirection)
+                        {
+                            // Right Side
+                            case 4:
+                            case 17:
+                            case 5:
+                                mesh.rotation.y = Math.PI / 2
+                                mesh.position.x += CELL_SIZE * .35
+                                break
+                            // Left Side
+                            case 2:
+                            case 6:
+                            case 18:
+                                mesh.rotation.y = Math.PI / -2
+                                mesh.position.x -= CELL_SIZE * .35
+                                break         
+                            // Top Side
+                            case 1:
+                            case 7:
+                            case 8:
+                                mesh.position.z -= CELL_SIZE *.35
+                                break;
+                            // Bottom Side
+                            case 3:
+                            case 16:
+                            case 15:
+                                mesh.position.z += CELL_SIZE *.35  
+                                break
+                                
+                            // Allow ignoring heads/lakes/swamps
+                            default:
+                                //hasNoDirection = true
+    
+                        }
+                        
+                        if(!hasNoDirection)
+                        {
+                            material.color = new THREE.Color(color)
+                            scene.add(mesh)
+                            WATER_FEATURES.push(mesh)
+                        }                     
+
+                    }
+
+                }
+
+
+
             }
 
             // Draw Trees
@@ -400,7 +517,6 @@ function setupScene() {
 
 function LoadMap(data)
 {
-    console.log(data)
     mapSize = data["heightMap"].length;
     mapHeights = data["heightMap"];
     mapTrees = data["treeMap"];
