@@ -337,7 +337,7 @@ class Map:
 
         # Get a history-aware flow direction for the current cell
         direction = self._MakeHistoryAwareDirection(flowDirectionNoHistory, previousFlowDirection) 
-        
+
 
         # If the lowestAdjacentCell is the current cell, it butts up
         # against another river. Stop tracing, and make this a swamp
@@ -364,7 +364,10 @@ class Map:
         if length == 0:
             self._riverMap[x][y] = 10 
 
-
+        # If we encounter a sea, stop forming the river. At this point
+        # it assimilates into the sea.
+        if self._heightMap[lowestAdjacentCell[0]][lowestAdjacentCell[1]] < 1:
+            return length
 
         # Now trace the lowestCell down
         return self._TraceRiverPath(lowestAdjacentCell[0], lowestAdjacentCell[1], tempArr, (x,y), path, length + 1)
