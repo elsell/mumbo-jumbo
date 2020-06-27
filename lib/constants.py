@@ -54,6 +54,12 @@ class Constants:
     def MinimumRiverLength(self):
         return 2
 
+    # Defines minimum height difference between cells
+    # at which waterfalls form
+    @property
+    def MinimumWaterfallHeight(self):
+        return 1.7
+
     # This property relates to the 'smoothness' of the generated map
     @property
     def SpreadSize(self):
@@ -225,8 +231,9 @@ class Constants:
     @property
     def WaterFeatureDescriptions(self):
         return{
-            1: "waterfall",
-            2: "delta"
+            1: "waterfall-begin",
+            2: "delta",
+            3: "waterfall-end",
         }
 
     

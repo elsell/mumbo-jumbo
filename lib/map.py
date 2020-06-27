@@ -286,6 +286,16 @@ class Map:
 
         return direction
 
+    def _IsWaterFall(self, cellBegin, cellEnd):
+        cellBeginHeight = self._heightMap[cellBegin[0]][cellBegin[1]]
+        cellEndHeight = self._heightMap[cellEnd[0]][cellEnd[1]]
+
+        heightDiff = cellBeginHeight - cellEndHeight
+
+        if heightDiff >= self._constants.MinimumWaterfallHeight:
+            return True
+        return False
+
     # Recursively traces a river down a slope starting at the cell
     # tempArr[x][y]
     def _TraceRiverPath(self, x, y, tempArr, previousCell, path=[], length = 0):
@@ -366,12 +376,19 @@ class Map:
         if length == 0:
             self._riverMap[x][y] = 10 
 
-        # If we encounter a sea, stop forming the river. At this point
-        # it assimilates into the sea.
-        if self._heightMap[lowestAdjacentCell[0]][lowestAdjacentCell[1]] < 1:
-            # Create a Delta
-            self._waterFeatureMap[x][y] = 2 # A delta
-            return length
+        # If we've got a waterfall condition, make the water fall!
+        if self._IsWaterFall((x,y), lowestAdjacentCell):
+            self._waterFeatureMap[x][y] = 1 # Waterfall-Begin
+            self._waterFeatureMap[lowestAdjacentCell[0]][lowestAdjacentCell[1]] = 3 # Waterfall-End
+ 
+        else:
+            # If we encounter a sea, stop forming the river. At this point
+            # it assimilates into the sea.
+            if self._heightMap[lowestAdjacentCell[0]][lowestAdjacentCell[1]] < 1:
+                # Create a Delta only if no waterfall
+                if self._waterFeatureMap[x][y] == 0:
+                    self._waterFeatureMap[x][y] = 2 # A delta
+                return length
 
         # Now trace the lowestCell down
         return self._TraceRiverPath(lowestAdjacentCell[0], lowestAdjacentCell[1], tempArr, (x,y), path, length + 1)
@@ -503,7 +520,7 @@ class Map:
                     tempArr[x][y] = random.uniform(self._constants.SeaFrequency * (-heightBound + 4.5), self._constants.MountainFrequency * (heightBound - 3)) 
 
             # Horizontal Interpolation
-            for x in range(0, self._size):
+            for x in range(0, self._size + sSize + 1):
                 for y in range(0, self._size):
                     yCoord = y - y % sSize
                     multiplier = float(y % sSize) / sSize
@@ -516,7 +533,7 @@ class Map:
 
             # Vertical Interpolation
             for x in range(0, self._size):
-                for y in range(0, self._size):
+                for y in range(0, self._size + sSize + 1):
                     xCoord = x - x % sSize
                     multiplier = float(x % sSize) / sSize
                     val1 = float(tempArr[xCoord + sSize][y])
