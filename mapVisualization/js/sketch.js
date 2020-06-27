@@ -4,6 +4,7 @@ playerPos = []
 mapHeights = [];
 mapTrees = []
 mapRivers = []
+waterFeatures = []
 mapEnemies = []
 mapSize = 0;
 DRAW_HEIGHTS = true
@@ -36,11 +37,18 @@ FOLIAGE_COLORS =
     "#fffacd", 
     "#f0e68c", 
 ];
+FEATURE_COLORS = 
+[
+    "#ccf8ff", // Waterfall
+    "#ff00aa", // Delta
+
+]
 
 TREES = []
 RIVERS = []
 ENEMIES = []
 PLAYERS = []
+WATER_FEATURES = []
 
 REQUEST_SAVE = false
 
@@ -206,7 +214,6 @@ function setupScene() {
             var curCellHeight = mapHeights[x][y];
             if(x == 0 && y == 0)
             {
-                console.log("OK")
                 color = "#ff0000"
             }
             else
@@ -308,6 +315,26 @@ function setupScene() {
 
             }
 
+            // Draw Water Features
+            var feature = parseInt(waterFeatures[x][y]);
+            if(feature > 0)
+            {
+                geometry = new THREE.BoxBufferGeometry(CELL_SIZE * .5,CELL_SIZE * .5,CELL_SIZE * .5)
+                material = new THREE.MeshPhongMaterial()
+                mesh = new THREE.Mesh(geometry, material)
+                mesh.position.x = x * CELL_SIZE 
+                mesh.position.y = boxHeight
+                mesh.position.z = -y * CELL_SIZE
+
+                mesh.rotation.y = Math.PI / 4
+                mesh.rotation.z = Math.PI / 4
+             
+                color = FEATURE_COLORS[feature + 1]
+                material.color = new THREE.Color(color)
+                scene.add(mesh)
+                WATER_FEATURES.push(mesh)
+            }
+
             // Draw Trees
             var numTrees = parseInt(mapTrees[x][y]);
             if(numTrees > 0) 
@@ -373,11 +400,13 @@ function setupScene() {
 
 function LoadMap(data)
 {
+    console.log(data)
     mapSize = data["heightMap"].length;
     mapHeights = data["heightMap"];
     mapTrees = data["treeMap"];
     mapRivers = data["riverMap"];
     mapEnemies = data["enemyMap"]
+    waterFeatures = data["waterFeatureMap"]
     playerPos = data["playerPosition"]
 
     // This ensures the map always fills the viewing window
