@@ -48,7 +48,8 @@ class Constants:
         return False
 
     # Prevents rivers of length less than this value from
-    # forming.
+    # forming. Note: large minimum lengths are not handled
+    # properly, so keep it small :P
     @property
     def MinimumRiverLength(self):
         return 2
@@ -219,6 +220,13 @@ class Constants:
             9: "a lake",
             10: "a river's head",
             11: "a swamp",
+        }
+
+    @property
+    def WaterFeatureDescriptions(self):
+        return{
+            1: "waterfall",
+            2: "delta"
         }
 
     

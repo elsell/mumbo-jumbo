@@ -36,15 +36,17 @@ class Map:
         if(VERBOSE):
             print("Initializing Blank Map (this may take a while)...")
 
-        self._heightMap = [ [ 0 for y in range( size ) ] for x in range( size ) ]
+        self._heightMap       = [ [ 0 for y in range( size ) ] for x in range( size ) ]
 
-        self._riverMap  = [ [ 0 for y in range( size ) ] for x in range( size ) ]
+        self._riverMap        = [ [ 0 for y in range( size ) ] for x in range( size ) ]
 
-        self._locMap    = [ [ 0 for y in range( size ) ] for x in range( size ) ]
+        self._locMap          = [ [ 0 for y in range( size ) ] for x in range( size ) ]
 
-        self._treeMap   = [ [ 0 for y in range( size ) ] for x in range( size ) ]
+        self._treeMap         = [ [ 0 for y in range( size ) ] for x in range( size ) ]
 
-        self._enemyMap  = [ [ None for y in range( size ) ] for x in range( size ) ]
+        self._waterFeatureMap = [ [ 0 for y in range( size ) ] for x in range( size ) ]
+
+        self._enemyMap        = [ [ None for y in range( size ) ] for x in range( size ) ]
 
         if(VERBOSE):
             print("Done.")
@@ -367,6 +369,8 @@ class Map:
         # If we encounter a sea, stop forming the river. At this point
         # it assimilates into the sea.
         if self._heightMap[lowestAdjacentCell[0]][lowestAdjacentCell[1]] < 1:
+            # Create a Delta
+            self._waterFeatureMap[x][y] = 2 # A delta
             return length
 
         # Now trace the lowestCell down
@@ -573,6 +577,7 @@ class Map:
             "mapSeed": self._seed,
             "heightMap": self._heightMap,
             "riverMap": self._riverMap,
+            "waterFeatureMap": self._waterFeatureMap,
             "locationMap": self._locMap,
             "treeMap": self._treeMap,
             "enemyMap": self._enemyMap
