@@ -47,6 +47,12 @@ class Constants:
     def RealisticRiverFlow(self):
         return False
 
+    # Prevents rivers of length less than this value from
+    # forming.
+    @property
+    def MinimumRiverLength(self):
+        return 2
+
     # This property relates to the 'smoothness' of the generated map
     @property
     def SpreadSize(self):

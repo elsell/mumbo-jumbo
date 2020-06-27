@@ -310,6 +310,14 @@ class Map:
             else:
                 self._riverMap[x][y] = 9 # A lake
                 path.append([x,y])
+
+                # Don't allow rivers to form if they're less
+                # than the minimum allowed river length
+                if length < self._constants.MinimumRiverLength:
+                    for cell in path:
+                        self._riverMap[cell[0]][cell[1]] = 0
+                        return 0
+
                 return length
 
         # Now we need to figure out the direction of flow...yippee    
