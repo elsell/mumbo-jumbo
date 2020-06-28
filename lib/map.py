@@ -13,6 +13,7 @@ import random
 import json
 import time
 import copy
+from threading import Thread
 from sys import getsizeof, argv
 
 class Map:
@@ -35,20 +36,18 @@ class Map:
         # Create and initialize member variables
         self._size = size
 
+        self._heightMap = []
+        self._riverMap = []
+        self._locMap = []
+        self._treeMap = []
+        self._waterFeatureMap = []
+        self._enemyMap = []
+
+
         if(VERBOSE):
-            print("Initializing Blank Map (this may take a while)...")
+            print("Initializing Blank Map...")
 
-        self._heightMap       = [ [ 0 for y in range( size ) ] for x in range( size ) ]
-
-        self._riverMap        = [ [ 0 for y in range( size ) ] for x in range( size ) ]
-
-        self._locMap          = [ [ 0 for y in range( size ) ] for x in range( size ) ]
-
-        self._treeMap         = [ [ 0 for y in range( size ) ] for x in range( size ) ]
-
-        self._waterFeatureMap = [ [ 0 for y in range( size ) ] for x in range( size ) ]
-
-        self._enemyMap        = [ [ None for y in range( size ) ] for x in range( size ) ]
+        self._InitMaps(size)
 
         if(VERBOSE):
             print("Done.")
@@ -56,11 +55,94 @@ class Map:
         # Now we shall generate our map
         self._GenerateMap()
 
+    def _InitMaps(self, size):
+        """
+        Dispatches threads to init the blank maps. Also waits 
+        for threads to join.
+        """
+        threads = []
+
+        threads.append(Thread(target=self._InitHeightMap,args=(size,)))
+        threads.append(Thread(target=self._InitRiverMap,args=(size,)))
+        threads.append(Thread(target=self._InitLocMap,args=(size,)))
+        threads.append(Thread(target=self._InitTreeMap,args=(size,)))
+        threads.append(Thread(target=self._InitWaterFeatureMap,args=(size,)))
+        threads.append(Thread(target=self._InitEnemyMap,args=(size,)))
+
+        for t in threads:
+            t.start()
+
+        for t in threads:
+            t.join()
+
+
+    def _InitHeightMap(self, size):
+        if(VERBOSE):
+            print("Initializing Height Map...")
+        self._heightMap       = [ [ 0 for y in range( size ) ] for x in range( size ) ]
+        if(VERBOSE):
+            print("Initializing Height Map - Done")
+
+    def _InitRiverMap(self, size):
+        if(VERBOSE):
+            print("Initializing River Map...")        
+        self._riverMap        = [ [ 0 for y in range( size ) ] for x in range( size ) ]
+        if(VERBOSE):
+            print("Initializing River Map - Done")
+
+    def _InitLocMap(self, size):
+        if(VERBOSE):
+            print("Initializing Location Map...")        
+        self._locMap          = [ [ 0 for y in range( size ) ] for x in range( size ) ]
+        if(VERBOSE):
+            print("Initializing Location Map - Done")
+
+    def _InitTreeMap(self, size):
+        if(VERBOSE):
+            print("Initializing Tree Map...")        
+        self._treeMap         = [ [ 0 for y in range( size ) ] for x in range( size ) ]
+        if(VERBOSE):
+            print("Initializing Tree Map - Done")
+
+    def _InitWaterFeatureMap(self, size):
+        if(VERBOSE):
+            print("Initializing Water Feature Map...")        
+        self._waterFeatureMap = [ [ 0 for y in range( size ) ] for x in range( size ) ]
+        if(VERBOSE):
+            print("Initializing Water Feature Map - Done")
+
+    def _InitEnemyMap(self, size):
+        if(VERBOSE):
+            print("Initializing Enemy Map...")        
+        self._enemyMap        = [ [ None for y in range( size ) ] for x in range( size ) ]
+        if(VERBOSE):
+            print("Initializing Enemy Map - Done")
+
+
     # Eventually will procedurally generate a map. For now, it...does!
     def _GenerateMap(self):
-        self._GenerateHeightMap()
-        self._GenerateTreeMap()
-        self._GenerateRiverMap()
+        """
+        Generates maps, one per thread. 
+        Waits for threads to join.
+        """
+
+        threads = []
+
+        # Run the height generation first, because the rest of the
+        # map generation relies on it. 
+        heightThread = Thread(target=self._GenerateHeightMap)
+        heightThread.start()
+        heightThread.join()
+
+
+        threads.append(Thread(target=self._GenerateTreeMap))
+        threads.append(Thread(target=self._GenerateRiverMap))
+
+        for t in threads:
+            t.start()
+
+        for t in threads:
+            t.join()
 
     def _GetFlowDirection(self, cell1, cell2):
         """
