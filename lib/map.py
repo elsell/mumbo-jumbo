@@ -24,6 +24,8 @@ class Map:
 
         if seed != None:
             random.seed(seed)
+        else:
+            seed = random.randint(0,100000000000000000)
         self._seed = seed
 
 

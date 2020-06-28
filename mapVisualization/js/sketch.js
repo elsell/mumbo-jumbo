@@ -165,6 +165,14 @@ function ToggleRivers()
     }
 }
 
+function ToggleWaterFeatures()
+{
+    for(var i = 0; i < WATER_FEATURES.length; i++)
+    {
+        WATER_FEATURES[i].visible = !WATER_FEATURES[i].visible;
+    }
+}
+
 function ToggleTrees()
 {
     for(var i = 0; i < TREES.length; i++)
@@ -524,6 +532,9 @@ function LoadMap(data)
     mapEnemies = data["enemyMap"]
     waterFeatures = data["waterFeatureMap"]
     playerPos = data["playerPosition"]
+    mapSeed = data["mapSeed"]
+
+    document.getElementById("mapSeed").innerText = mapSeed
 
     // This ensures the map always fills the viewing window
     HEIGHT_SCALAR = CELL_SIZE * .25;

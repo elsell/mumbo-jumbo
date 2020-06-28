@@ -13,17 +13,14 @@ document.onkeypress =(e) =>
 {
     switch(e.key)
     {
-        // vV
         case "v":
         case "V":
             TogglePlayers()
             break;
-        // tT 
         case "t":
         case "T":
             ToggleTrees()
             break;
-        // 
         case "r":
         case "R":
             ToggleRivers()
@@ -31,7 +28,11 @@ document.onkeypress =(e) =>
         case "e":
         case "E":
             ToggleEnemies()
-            break;            
+            break;   
+        case "f":         
+        case "F":         
+            ToggleWaterFeatures()
+            break;
         // space
         case " ":
             ResetView();
