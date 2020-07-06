@@ -1,5 +1,5 @@
 
-[![Code Grade](<https://www.code-inspector.com/project/10646/score/svg>)]
+![Code Grade](<https://www.code-inspector.com/project/10646/score/svg>)
 # mumbo-jumbo
 The extra most-bestest text adventure!
    
