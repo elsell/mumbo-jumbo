@@ -1,4 +1,5 @@
 #! /usr/bin/python3
+import math
 
 """
 Class to hold constant values, basically a settings class
@@ -235,6 +236,54 @@ class Constants:
             2: "delta",
             3: "waterfall-end",
         }
+
+    @property
+    def BuildingTypes(self):
+        return{
+            0: "no building",
+            1: "Town Hall",
+            2: "House",
+            3: "Inn",
+            4: "Temple",
+            5: "Black Smith",
+            6: "Enchantry",
+            7: "Shope",
+        }
+
+    @property
+    def BuildingWeights(self):
+        """
+        Returns the weights of each building type. These weights are used
+        when generating towns. Higher weight equates to less chance that the 
+        building type will be built, and thus will be more rare.
+        """
+        return{
+            0: .5,
+            1: math.inf,
+            2: 1,
+            3: 2,
+            4: 4,
+            5: 3, 
+            6: 3,
+            7: 2 
+        }
+
+    @property
+    def BuildingThreshold(self):
+        """ 
+        Defines the number of unsuccessful tries to place a building
+        on the map before stopping building generation. 
+        """
+        return 169
+
+    @property
+    def BuildingDistanceThreshold(self):
+        """
+        Defines the ratio of map size to distance between town centers,
+        as well as a min and max:
+        (ratio, min, max)
+        """
+        return (.13, 10, 45)
 
     
 def Clamp(n, lowBound, highBound):
